@@ -18,7 +18,7 @@
 6. 登出的时候会把redis的数据清空，如果redis的token没有或过期，前端就要重新登入。
 7. 登录成功后端返回JWT Token，前端本地存储，每次登入则带token。
 
-![](https://gulimall-franky.oss-cn-hangzhou.aliyuncs.com/%E6%B3%A8%E5%86%8C%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+![](https://gulimall-franky.oss-cn-hangzhou.aliyuncs.com/%E7%99%BB%E5%85%A5%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
 
 ### **注册模块**
 
