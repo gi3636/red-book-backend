@@ -46,5 +46,5 @@ CREATE TABLE tbl_user(
 
 
 
-![小红书功能点.png](https://franky123.oss-cn-hangzhou.aliyuncs.com/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%8A%9F%E8%83%BD%E7%82%B9.png)
+![小红书功能点.png](https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%8A%9F%E8%83%BD%E7%82%B9.png)
 
