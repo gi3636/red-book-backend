@@ -3,6 +3,7 @@ package com.example.red.book.generator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -87,7 +88,7 @@ public class MyBatisPlusGenerator {
         return new PackageConfig.Builder()
                 .moduleName(moduleName)
                 .parent(props.getStr("package.base"))
-                .entity("model")
+                .entity("entity")
                 .pathInfo(Collections.singletonMap(OutputFile.mapperXml, projectPath + "/src/main/resources/mapper/" + moduleName))
                 .build();
     }
@@ -104,17 +105,9 @@ public class MyBatisPlusGenerator {
      * 初始化策略配置
      */
     private static StrategyConfig initStrategyConfig(String[] tableNames) {
-        new StrategyConfig.Builder()
-                .enableCapitalMode()
-                .enableSkipView()
-                .disableSqlFilter()
-                .likeTable(new LikeTable("USER"))
-                .addInclude("t_simple")
-                .addTablePrefix("t_", "c_")
-                .addFieldSuffix("_flag")
-                .build();
         StrategyConfig.Builder builder = new StrategyConfig.Builder();
         builder.entityBuilder()
+                .idType(IdType.ASSIGN_ID)
                 .naming(NamingStrategy.underline_to_camel)
                 .versionColumnName("version")
                 .versionPropertyName("version")

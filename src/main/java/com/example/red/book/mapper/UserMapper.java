@@ -1,10 +1,7 @@
-package com.example.red.book.modules.api.mapper;
+package com.example.red.book.mapper;
 
-import com.example.red.book.modules.api.model.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import com.example.red.book.entity.User;
 
 /**
  * <p>

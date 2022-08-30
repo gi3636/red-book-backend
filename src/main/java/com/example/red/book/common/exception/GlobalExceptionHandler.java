@@ -1,55 +1,42 @@
 package com.example.red.book.common.exception;
 
+
 import com.example.red.book.common.api.CommonResult;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * 全局异常处理
- * Created by macro on 2020/2/27.
+ * @className: GlobalExceptionHandler
+ * @description: 全局异常处理
+ * @author: liusCoding
+ * @create: 2020-05-02 12:23
  */
-@ControllerAdvice
+
+@RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
-    @ResponseBody
-    @ExceptionHandler(value = ApiException.class)
-    public CommonResult handle(ApiException e) {
-        if (e.getErrorCode() != null) {
-            return CommonResult.failed(e.getErrorCode());
-        }
-        return CommonResult.failed(e.getMessage());
-    }
 
-    @ResponseBody
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public CommonResult handleValidException(MethodArgumentNotValidException e) {
-        BindingResult bindingResult = e.getBindingResult();
-        String message = null;
-        if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            if (fieldError != null) {
-                message = fieldError.getField()+fieldError.getDefaultMessage();
-            }
-        }
-        return CommonResult.validateFailed(message);
-    }
+    /**
+     * 指定出现什么异常执行这个方法
+     */
+    //@ExceptionHandler(Exception.class)
+    //public ResultVo error(Exception e) {
+    //    e.printStackTrace();
+    //    return ResultVo.error().msg("服务器又耍流氓了..");
+    //}
 
-    @ResponseBody
-    @ExceptionHandler(value = BindException.class)
-    public CommonResult handleValidException(BindException e) {
-        BindingResult bindingResult = e.getBindingResult();
-        String message = null;
-        if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            if (fieldError != null) {
-                message = fieldError.getField()+fieldError.getDefaultMessage();
-            }
-        }
-        return CommonResult.validateFailed(message);
+
+    /**
+     * 自定义异常处理
+     *
+     * @param e
+     * @return ResultVo
+     */
+    @ExceptionHandler(GlobalException.class)
+    public CommonResult error(GlobalException e) {
+        log.error("异常信息：{}", e);
+        return CommonResult.failed(e.getCode(), (e.getMessage()));
     }
 }

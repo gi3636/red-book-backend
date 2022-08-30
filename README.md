@@ -28,3 +28,6 @@
 4. 注册成功则返回成功消息，前端跳转到登录界面。
 
 ![Untitled Diagram (3).png](https://gulimall-franky.oss-cn-hangzhou.aliyuncs.com/%E6%B3%A8%E5%86%8C%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+
+
+访问Swagger-UI接口文档：http://localhost:8080/swagger-ui/

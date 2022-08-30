@@ -27,10 +27,10 @@ public class SwaggerConfig extends BaseSwaggerConfig {
     @Override
     public SwaggerProperties swaggerProperties() {
         return SwaggerProperties.builder()
-                .apiBasePackage("com.example.red.book.modules")
-                .title("mall-tiny项目骨架")
-                .description("mall-tiny项目骨架相关接口文档")
-                .contactName("macro")
+                .apiBasePackage("com.example.red.book")
+                .title("red-book项目骨架")
+                .description("red-book项目骨架相关接口文档")
+                .contactName("franky")
                 .version("1.0")
                 .enableSecurity(true)
                 .build();

@@ -1,13 +1,16 @@
-package com.example.red.book.modules.api.model;
+package com.example.red.book.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -26,7 +29,8 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("用户;")
-    private String id;
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private Integer id;
 
     @ApiModelProperty("用户名")
     private String username;
