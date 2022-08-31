@@ -1,12 +1,18 @@
 package com.example.red.book.common.api;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 通用返回对象
  * Created by macro on 2019/4/19.
  */
 public class CommonResult<T> {
+
+    @ApiModelProperty("返回码")
     private long code;
+    @ApiModelProperty("返回信息")
     private String message;
+    @ApiModelProperty("返回数据")
     private T data;
 
     protected CommonResult() {

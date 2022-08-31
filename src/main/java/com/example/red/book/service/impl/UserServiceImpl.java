@@ -1,7 +1,6 @@
 package com.example.red.book.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
@@ -9,12 +8,12 @@ import com.example.red.book.common.service.RedisService;
 import com.example.red.book.mapper.UserMapper;
 import com.example.red.book.entity.User;
 import com.example.red.book.model.form.RegisterForm;
+import com.example.red.book.model.vo.UserVo;
 import com.example.red.book.security.util.JwtTokenUtil;
 import com.example.red.book.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     //密码需要客户端加密后传
-    public String login(String username, String password) {
+    public UserVo login(String username, String password) {
         //获取缓存信息
         User user = getUserCache(username);
         if (user == null) {
@@ -57,7 +56,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw GlobalException.from(ResultCode.PASSWORD_WRONG);
         }
-        return jwtTokenUtil.generateToken(user);
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user, userVo);
+        userVo.setToken(jwtTokenUtil.generateToken(user));
+        return userVo;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //查询是否有用户
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, registerForm.getUsername());
-        if (!registerForm.getPassword().equals(registerForm.getSecondPassword())) {
+        if (!registerForm.getPassword().equals(registerForm.getConfirmPassword())) {
             throw GlobalException.from(ResultCode.PASSWORD_NOT_SAME);
         }
         User user = baseMapper.selectOne(wrapper);

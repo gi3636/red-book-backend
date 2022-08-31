@@ -15,5 +15,5 @@ public class RegisterForm {
     @ApiModelProperty(value = "密码")
     private String password;
     @ApiModelProperty(value = "确认密码")
-    private String secondPassword;
+    private String confirmPassword;
 }
