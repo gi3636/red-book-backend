@@ -246,8 +246,7 @@ applicatin/json
 
 ## 小红书功能点
 
-![98dd3ad39a45a7380a73390f12d04a7](/Volumes/[C] Windows 11.hidden/Users/FENGGI~1/AppData/Local/Temp/WeChat
-Files/98dd3ad39a45a7380a73390f12d04a7.jpg)
+![98dd3ad39a45a7380a73390f12d04a7](https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E7%99%BB%E5%BD%95%E9%A1%B5.jpg)
 
 ![小红书功能点.png](https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%8A%9F%E8%83%BD%E7%82%B9.png)
 
