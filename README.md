@@ -49,7 +49,6 @@ CREATE TABLE tbl_user(
 
 
 ### 小红书功能点
-##### 记得调黑暗模式才能看得见字
 
 ![小红书功能点.png](https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%8A%9F%E8%83%BD%E7%82%B9.png)
 
