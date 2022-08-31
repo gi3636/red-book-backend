@@ -8,6 +8,12 @@
 
 访问Swagger-UI接口文档：http://localhost:8080/swagger-ui/
 
+接口文档在api-doc 目录下
+
+### JWT-Token验证 用处以及使用场景
+
+Token 主要的用处是用在安全的方面。除了登录注册之类的接口，前端每发一次请求都需要携带token在header里。然后后端每一次都去验证这token是否是合法的。如果token 超时或者token是假的，将无法访问接口。需要重新登录来获取新的token，这样就能防止在无登录的情况去修改或者查看某些资料。同时因为token的时效性，在token无效前，用户都能保持着登录的状态，大大提升了用户的体验。
+
 
 
 ### 数据库
@@ -43,8 +49,6 @@ CREATE TABLE tbl_user(
 
 
 ### 小红书功能点
-
-
 
 ![小红书功能点.png](https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%8A%9F%E8%83%BD%E7%82%B9.png)
 
