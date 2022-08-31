@@ -24,27 +24,24 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
 + 用户表
 
 ```sql
-DROP TABLE IF EXISTS tbl_user;
-CREATE TABLE tbl_user
-(
-    id           INT          NOT NULL AUTO_INCREMENT COMMENT '用户',
-    username     VARCHAR(255) NOT NULL COMMENT '用户名',
-    password     VARCHAR(255) NOT NULL COMMENT '密码',
-    mobile       VARCHAR(255) COMMENT '手机号',
-    nickname     VARCHAR(255) COMMENT '昵称;昵称',
-    no           VARCHAR(255) COMMENT '媒体号，唯一标识;类似头条号，抖音号，公众号，唯一标识，需要限制修改次数，比如终生1次，每年1次，每半年1次等，可以用于付费修改。',
-    avatar       VARCHAR(255) COMMENT '头像',
-    sex          INT          NOT NULL DEFAULT 0 COMMENT '性别;1:男  0:女  2:保密',
-    birthday     VARCHAR(255) COMMENT '生日',
-    country      VARCHAR(255) COMMENT '国家',
-    city         VARCHAR(255) COMMENT '城市',
-    description  VARCHAR(900) COMMENT '简介',
-    cover        VARCHAR(255) COMMENT '个人介绍的背景图',
-    created_time DATETIME COMMENT '创建时间;创建时间',
-    updated_time DATETIME COMMENT '更新时间;更新时间',
-    deleted      INT                   DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',
-    PRIMARY KEY (id)
-) COMMENT = '用户表';
+CREATE TABLE `tbl_user` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户',
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
+  `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
+  `mobile` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号',
+  `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称;昵称',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '头像',
+  `sex` varchar(32) DEFAULT '0' COMMENT '性别\n',
+  `birthday` datetime DEFAULT NULL COMMENT '生日',
+  `country` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '国家',
+  `city` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '城市',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '简介',
+  `cover` varchar(255) DEFAULT NULL COMMENT '个人介绍的背景图',
+  `created_time` datetime DEFAULT NULL COMMENT '创建时间;创建时间',
+  `updated_time` datetime DEFAULT NULL COMMENT '更新时间;更新时间',
+  `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除;1是删除，0是不删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=125878275 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
 
 ```
 
@@ -246,7 +243,13 @@ applicatin/json
 
 ## 小红书功能点
 
-![98dd3ad39a45a7380a73390f12d04a7](https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E7%99%BB%E5%BD%95%E9%A1%B5.jpg)
+<img src="https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E7%99%BB%E5%BD%95%E9%A1%B5.jpg" style=“width:200px height:300px” />
+
+
+
+<Img src="https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E7%99%BB%E5%BD%95%E9%A1%B5.jpg"  style="width:350px;height:600px;" >
+
+![98dd3ad39a45a7380a73390f12d04a7]()
 
 ![小红书功能点.png](https://raw.githubusercontent.com/gi3636/red-book-backend/main/images/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%8A%9F%E8%83%BD%E7%82%B9.png)
 

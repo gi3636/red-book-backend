@@ -28,9 +28,9 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("用户;")
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Integer id;
+    @ApiModelProperty("用户")
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     @ApiModelProperty("用户名")
     private String username;
@@ -41,20 +41,17 @@ public class User implements Serializable {
     @ApiModelProperty("手机号")
     private String mobile;
 
-    @ApiModelProperty("昵称;媒体号")
+    @ApiModelProperty("昵称;昵称")
     private String nickname;
-
-    @ApiModelProperty("媒体号，唯一标识;类似头条号，抖音号，公众号，唯一标识，需要限制修改次数，比如终生1次，每年1次，每半年1次等，可以用于付费修改。")
-    private String no;
 
     @ApiModelProperty("头像")
     private String avatar;
 
-    @ApiModelProperty("性别;1:男  0:女  2:保密")
-    private Integer sex;
+    @ApiModelProperty("性别")
+    private String sex;
 
     @ApiModelProperty("生日")
-    private String birthday;
+    private Date birthday;
 
     @ApiModelProperty("国家")
     private String country;
@@ -76,7 +73,6 @@ public class User implements Serializable {
 
     @ApiModelProperty("是否删除;1是删除，0是不删除")
     @TableLogic
-    private Integer deleted;
-
+    private Boolean deleted;
 
 }
