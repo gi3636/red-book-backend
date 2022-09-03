@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.common.service.RedisService;
+import com.example.red.book.constant.RedisConstant;
 import com.example.red.book.entity.User;
 import com.example.red.book.manager.UserManager;
 import com.example.red.book.mapper.UserMapper;
@@ -14,7 +15,6 @@ import com.example.red.book.security.util.JwtTokenUtil;
 import com.example.red.book.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +37,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private UserManager userManager;
-
-    @Value("${redis.database}")
-    private String REDIS_DATABASE;
-    @Value("${redis.expire.common}")
-    private Long REDIS_EXPIRE;
-    @Value("${redis.key.user}")
-    private String REDIS_KEY_USER;
 
 
     @Autowired
@@ -93,7 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (username == null) {
             throw GlobalException.from("username 不能为空");
         }
-        String key = REDIS_DATABASE + ":" + REDIS_KEY_USER + ":" + username;
+        String key =  RedisConstant.REDIS_DATABASE + ":" + RedisConstant.REDIS_KEY_USER + ":" + username;
         User user = (User) redisService.get(key);
         if (user != null) {
             return user;
@@ -104,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user == null) {
             return null;
         }
-        redisService.set(key, user, REDIS_EXPIRE);
+        redisService.set(key, user, 86400);
         return user;
     }
 }
