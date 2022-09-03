@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.common.service.RedisService;
-import com.example.red.book.mapper.UserMapper;
 import com.example.red.book.entity.User;
+import com.example.red.book.manager.UserManager;
+import com.example.red.book.mapper.UserMapper;
 import com.example.red.book.model.form.RegisterForm;
 import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.security.util.JwtTokenUtil;
@@ -33,6 +34,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private UserManager userManager;
 
     @Value("${redis.database}")
     private String REDIS_DATABASE;
@@ -69,9 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         //查询是否有用户
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUsername, registerForm.getUsername());
-        User existUser = baseMapper.selectOne(wrapper);
+        User existUser = userManager.getByUsername(registerForm.getUsername());
         if (existUser != null) {
             throw GlobalException.from(ResultCode.USER_EXITS);
         }
