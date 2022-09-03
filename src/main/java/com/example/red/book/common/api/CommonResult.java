@@ -82,6 +82,16 @@ public class CommonResult<T> {
         return new CommonResult<T>(ResultCode.FAILED.getCode(), message, null);
     }
 
+
+    /**
+     * 失败返回结果
+     *
+     * @param data
+     */
+    public static <T> CommonResult<T> failed(T data) {
+        return new CommonResult<T>(ResultCode.VALIDATE_FAILED.getCode(), ResultCode.VALIDATE_FAILED.getMessage(), data);
+    }
+
     /**
      * 失败返回结果
      */
