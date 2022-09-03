@@ -3,8 +3,7 @@ package com.example.red.book.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.red.book.entity.User;
 import com.example.red.book.model.form.RegisterForm;
-import com.example.red.book.model.vo.UserVo;
-import lombok.extern.slf4j.Slf4j;
+import com.example.red.book.model.vo.UserVO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService extends IService<User> {
 
-    UserVo login(String username, String password);
+    UserVO login(String username, String password);
 
-    User register(RegisterForm registerForm);
+    Boolean register(RegisterForm registerForm);
 }

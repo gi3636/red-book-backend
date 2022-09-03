@@ -1,17 +1,14 @@
 package com.example.red.book.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserVo {
+public class UserVO {
 
     @ApiModelProperty("用户id")
     private Integer id;

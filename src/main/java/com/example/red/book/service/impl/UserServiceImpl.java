@@ -8,7 +8,7 @@ import com.example.red.book.common.service.RedisService;
 import com.example.red.book.mapper.UserMapper;
 import com.example.red.book.entity.User;
 import com.example.red.book.model.form.RegisterForm;
-import com.example.red.book.model.vo.UserVo;
+import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.security.util.JwtTokenUtil;
 import com.example.red.book.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -47,53 +47,62 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     //密码需要客户端加密后传
-    public UserVo login(String username, String password) {
+    public UserVO login(String username, String password) {
         //获取缓存信息
-        User user = getUserCache(username);
+        User user = getUserByCache(username);
         if (user == null) {
             throw GlobalException.from(ResultCode.USER_NOT_FOUND);
         }
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw GlobalException.from(ResultCode.PASSWORD_WRONG);
         }
-        UserVo userVo = new UserVo();
+        UserVO userVo = new UserVO();
         BeanUtils.copyProperties(user, userVo);
         userVo.setToken(jwtTokenUtil.generateToken(user));
         return userVo;
     }
 
     @Override
-    public User register(RegisterForm registerForm) {
-        //查询是否有用户
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUsername, registerForm.getUsername());
+    public Boolean register(RegisterForm registerForm) {
         if (!registerForm.getPassword().equals(registerForm.getConfirmPassword())) {
             throw GlobalException.from(ResultCode.PASSWORD_NOT_SAME);
         }
-        User user = baseMapper.selectOne(wrapper);
-        if (user != null) {
+
+        //查询是否有用户
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUsername, registerForm.getUsername());
+        User existUser = baseMapper.selectOne(wrapper);
+        if (existUser != null) {
             throw GlobalException.from(ResultCode.USER_EXITS);
         }
-        user = new User();
+
+        User user = new User();
         //将密码进行加密操作
         String encodePassword = passwordEncoder.encode(registerForm.getPassword());
         user.setUsername(registerForm.getUsername());
         user.setMobile(registerForm.getUsername());
         user.setPassword(encodePassword);
         user.setNickname("吃饱没事干");
-        baseMapper.insert(user);
-        return user;
+        int result = baseMapper.insert(user);
+        return result > 0;
     }
 
-    public User getUserCache(String username) {
+    public User getUserByCache(String username) {
+        if (username == null) {
+            throw GlobalException.from("username 不能为空");
+        }
         String key = REDIS_DATABASE + ":" + REDIS_KEY_USER + ":" + username;
         User user = (User) redisService.get(key);
-        if (user == null) {
-            LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-            wrapper.eq(User::getUsername, username);
-            user = baseMapper.selectOne(wrapper);
-            redisService.set(key, user, REDIS_EXPIRE);
+        if (user != null) {
+            return user;
         }
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUsername, username);
+        user = baseMapper.selectOne(wrapper);
+        if (user == null) {
+            return null;
+        }
+        redisService.set(key, user, REDIS_EXPIRE);
         return user;
     }
 }
