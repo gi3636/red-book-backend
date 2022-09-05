@@ -32,8 +32,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private RedisService redisService;
 
     @Autowired
     private UserManager userManager;
@@ -46,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     //密码需要客户端加密后传
     public UserVO login(String username, String password) {
         //获取缓存信息
-        User user = getUserByCache(username);
+        User user = userManager.getUserByCache(username);
         if (user == null) {
             throw GlobalException.from(ResultCode.USER_NOT_FOUND);
         }
@@ -77,27 +75,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUsername(registerForm.getUsername());
         user.setMobile(registerForm.getUsername());
         user.setPassword(encodePassword);
+        user.setAvatar("https://avatars1.githubusercontent.com/u/" + (int) (Math.random() * 1000));
         user.setNickname("吃饱没事干");
         int result = baseMapper.insert(user);
         return result > 0;
     }
 
-    public User getUserByCache(String username) {
-        if (username == null) {
-            throw GlobalException.from("username 不能为空");
-        }
-        String key =  RedisConstant.REDIS_DATABASE + ":" + RedisConstant.REDIS_KEY_USER + ":" + username;
-        User user = (User) redisService.get(key);
-        if (user != null) {
-            return user;
-        }
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUsername, username);
-        user = baseMapper.selectOne(wrapper);
-        if (user == null) {
-            return null;
-        }
-        redisService.set(key, user, 86400);
-        return user;
-    }
 }

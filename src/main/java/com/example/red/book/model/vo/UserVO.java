@@ -22,9 +22,6 @@ public class UserVO {
     @ApiModelProperty("昵称;媒体号")
     private String nickname;
 
-    @ApiModelProperty("媒体号，唯一标识;类似头条号，抖音号，公众号，唯一标识，需要限制修改次数，比如终生1次，每年1次，每半年1次等，可以用于付费修改。")
-    private String no;
-
     @ApiModelProperty("头像")
     private String avatar;
 
