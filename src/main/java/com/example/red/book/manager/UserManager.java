@@ -16,9 +16,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserManager extends ServiceImpl<UserMapper, User> {
 
+    private final String userKey = RedisConstant.REDIS_DATABASE + ":" + RedisConstant.REDIS_KEY_USER + ":";
 
     @Autowired
-    private RedisManager redisManager;
+    private RedisService redisService;
 
     /**
      * 根据用户名查询用户信息
@@ -26,7 +27,7 @@ public class UserManager extends ServiceImpl<UserMapper, User> {
      * @param username
      * @return
      */
-    public User getByUsername(String username) {
+    public User getAndSetCacheByUsername(String username) {
         if (username == null) {
             throw GlobalException.from("username 不能为空");
         }
@@ -34,7 +35,8 @@ public class UserManager extends ServiceImpl<UserMapper, User> {
         wrapper.eq(User::getUsername, username);
         User existUser = baseMapper.selectOne(wrapper);
         if (existUser != null) {
-            redisManager.saveUser(existUser);
+            String key = userKey + existUser.getUsername();
+            redisService.set(key, existUser, RedisConstant.REDIS_EXPIRE);
         }
         return existUser;
     }
@@ -44,12 +46,13 @@ public class UserManager extends ServiceImpl<UserMapper, User> {
         if (username == null) {
             throw GlobalException.from("username 不能为空");
         }
-        User existUser = redisManager.getUserByUsername(username);
-        if (existUser != null) {
-            return existUser;
+        String key = userKey + username;
+        User user = (User) redisService.get(key);
+        if (user != null) {
+            return user;
         }
-        existUser = this.getByUsername(username);
-        return existUser;
+        user = this.getAndSetCacheByUsername(username);
+        return user;
     }
 
 }

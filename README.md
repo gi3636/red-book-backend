@@ -31,7 +31,7 @@ CREATE TABLE `tbl_user` (
   `mobile` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号',
   `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称;昵称',
   `avatar` varchar(255) DEFAULT NULL COMMENT '头像',
-  `sex` varchar(32) DEFAULT '0' COMMENT '性别\n',
+  `sex` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '性别',
   `birthday` datetime DEFAULT NULL COMMENT '生日',
   `country` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '国家',
   `city` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '城市',
@@ -41,7 +41,7 @@ CREATE TABLE `tbl_user` (
   `updated_time` datetime DEFAULT NULL COMMENT '更新时间;更新时间',
   `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除;1是删除，0是不删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=125878275 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=125878280 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
 
 ```
 

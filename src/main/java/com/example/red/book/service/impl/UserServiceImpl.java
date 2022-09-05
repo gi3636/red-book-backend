@@ -1,11 +1,8 @@
 package com.example.red.book.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
-import com.example.red.book.common.service.RedisService;
-import com.example.red.book.constant.RedisConstant;
 import com.example.red.book.entity.User;
 import com.example.red.book.manager.UserManager;
 import com.example.red.book.mapper.UserMapper;
@@ -64,7 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         //查询是否有用户
-        User existUser = userManager.getByUsername(registerForm.getUsername());
+        User existUser = userManager.getAndSetCacheByUsername(registerForm.getUsername());
         if (existUser != null) {
             throw GlobalException.from(ResultCode.USER_EXITS);
         }
