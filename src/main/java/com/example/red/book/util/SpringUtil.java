@@ -1,4 +1,4 @@
-package com.example.red.book.security.util;
+package com.example.red.book.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

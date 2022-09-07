@@ -1,4 +1,4 @@
-package com.example.red.book.security.util;
+package com.example.red.book.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -9,7 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -26,6 +26,7 @@ import java.util.Map;
  * HMACSHA512(base64UrlEncode(header) + "." +base64UrlEncode(payload),secret)
  * Created by macro on 2018/4/26.
  */
+@Component
 public class JwtTokenUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
     private static final String CLAIM_KEY_USERNAME = "sub";
@@ -91,10 +92,10 @@ public class JwtTokenUtil {
      * @param token       客户端传入的token
      * @param userDetails 从数据库中查询出来的用户信息
      */
-    public boolean validateToken(String token, UserDetails userDetails) {
-        String username = getUserNameFromToken(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
+    //public boolean validateToken(String token, UserDetails userDetails) {
+    //    String username = getUserNameFromToken(token);
+    //    return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    //}
 
     /**
      * 判断token是否已经失效
@@ -115,12 +116,12 @@ public class JwtTokenUtil {
     /**
      * 根据用户信息生成token
      */
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
-        claims.put(CLAIM_KEY_CREATED, new Date());
-        return generateToken(claims);
-    }
+    //public String generateToken(UserDetails userDetails) {
+    //    Map<String, Object> claims = new HashMap<>();
+    //    claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+    //    claims.put(CLAIM_KEY_CREATED, new Date());
+    //    return generateToken(claims);
+    //}
 
     /**
      * 根据用户信息生成token

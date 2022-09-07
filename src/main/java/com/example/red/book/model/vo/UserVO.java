@@ -5,11 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserVO {
 
+    @NotNull(message = "id不能为空" )
     @ApiModelProperty("用户id")
     private Integer id;
 

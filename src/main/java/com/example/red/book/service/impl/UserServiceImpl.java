@@ -1,5 +1,6 @@
 package com.example.red.book.service.impl;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
@@ -8,11 +9,10 @@ import com.example.red.book.manager.UserManager;
 import com.example.red.book.mapper.UserMapper;
 import com.example.red.book.model.form.RegisterForm;
 import com.example.red.book.model.vo.UserVO;
-import com.example.red.book.security.util.JwtTokenUtil;
+import com.example.red.book.util.JwtTokenUtil;
 import com.example.red.book.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,8 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserManager userManager;
 
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
 
     @Override
     //密码需要客户端加密后传
@@ -45,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user == null) {
             throw GlobalException.from(ResultCode.USER_NOT_FOUND);
         }
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!DigestUtil.md5Hex(password).equals(user.getPassword())) {
             throw GlobalException.from(ResultCode.PASSWORD_WRONG);
         }
         UserVO userVo = new UserVO();
@@ -68,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         User user = new User();
         //将密码进行加密操作
-        String encodePassword = passwordEncoder.encode(registerForm.getPassword());
+        String encodePassword = DigestUtil.md5Hex(registerForm.getPassword());
         user.setUsername(registerForm.getUsername());
         user.setMobile(registerForm.getUsername());
         user.setPassword(encodePassword);

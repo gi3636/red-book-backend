@@ -1,6 +1,6 @@
 server:
   port: 8080
-
+  address: 0.0.0.0
 spring:
   application:
     name: red-book
@@ -8,9 +8,9 @@ spring:
     active: dev
   #  main:
   #    allow-circular-references: true
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -40,21 +40,22 @@ redis:
   expire:
     common: 86400 # 24小时
 
-secure:
-  ignored:
-    urls: #安全路径白名单
-      - /swagger-ui/
-      - /swagger-resources/**
-      - /**/v2/api-docs
-      - /**/*.html
-      - /**/*.js
-      - /**/*.css
-      - /**/*.png
-      - /favicon.ico
-      - /actuator/**
-      - /druid/**
-      - /admin/login
-      - /admin/register
-      - /admin/info
-      - /admin/logout
-      - /api/auth/**
+#secure:
+#  ignored:
+#    urls: #安全路径白名单
+#      - /swagger-ui/
+#      - /swagger-resources/**
+#      - /**/v2/api-docs
+#      - /**/*.html
+#      - /**/*.js
+#      - /**/*.css
+#      - /**/*.png
+#      - /favicon.ico
+#      - /actuator/**
+#      - /druid/**
+#      - /admin/login
+#      - /admin/register
+#      - /admin/info
+#      - /admin/logout
+#      - /api/auth/**
+#      - /api/**
