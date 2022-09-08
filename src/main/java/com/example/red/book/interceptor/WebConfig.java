@@ -5,11 +5,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.util.pattern.PathPatternParser;
 
@@ -39,22 +41,27 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
     }
 
     @Bean
-    LoginInterceptor loginInterceptor() {
-        return new LoginInterceptor();
+    AuthInterceptor authInterceptor() {
+        return new AuthInterceptor();
     }
 
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor())
-                //.addPathPatterns("/**")
+        registry.addInterceptor(authInterceptor())
+
+                .addPathPatterns("/**")
                 .excludePathPatterns("/")
+                .excludePathPatterns("/v2/api-docs")
+                .excludePathPatterns("/v3/api-docs")
+                .excludePathPatterns("/swagger-ui/")
+                .excludePathPatterns("/swagger-resources")
+                .excludePathPatterns("/swagger-resources/**")
+                // .excludePathPatterns("/swagger-ui/**")
                 //.excludePathPatterns("/user/**")
                 .excludePathPatterns("/sts/**")
                 //.excludePathPatterns("/video/**")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/register")
-                .excludePathPatterns("/chatroom")
+                .excludePathPatterns("/api/auth/**")
                 .excludePathPatterns("/error")
                 .excludePathPatterns("/test/**")
                 .excludePathPatterns("/webjars/**")
@@ -63,7 +70,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
                 .excludePathPatterns("/css/**", "/js/**", "/img/**", "/fontawesome-free-5.11.2-web/**", "/favicon.ico");
     }
 
-    //
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //将所有/static/** 访问都映射到classpath:/static/ 目录下
@@ -74,6 +80,9 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/swagger-ui/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+                .resourceChain(false);
 
     }
 }

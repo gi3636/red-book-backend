@@ -67,11 +67,26 @@
             <version>${mysql-connector.version}</version>
         </dependency>
         <!--Swagger-UI API文档生产工具-->
+        <!-- Swagger 3.0.0 相关依赖 -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox-swagger.version}</version>
+            <version>3.0.0</version>
         </dependency>
+
+        <!-- knife4j 3.0.2 相关依赖 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.google.guava/guava &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--    <groupId>com.google.guava</groupId>-->
+        <!--    <artifactId>guava</artifactId>-->
+        <!--    <version>25.1-jre</version>-->
+        <!--</dependency>-->
+
         <!--redis依赖配置-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -136,16 +151,16 @@
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>${docker.maven.plugin.version}</version>
-<!--                <executions>-->
-<!--                    &lt;!&ndash;如果想在项目打包时构建镜像添加&ndash;&gt;-->
-<!--                    <execution>-->
-<!--                        <id>build-image</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>build</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
+                <!--                <executions>-->
+                <!--                    &lt;!&ndash;如果想在项目打包时构建镜像添加&ndash;&gt;-->
+                <!--                    <execution>-->
+                <!--                        <id>build-image</id>-->
+                <!--                        <phase>package</phase>-->
+                <!--                        <goals>-->
+                <!--                            <goal>build</goal>-->
+                <!--                        </goals>-->
+                <!--                    </execution>-->
+                <!--                </executions>-->
                 <configuration>
                     <!-- Docker 远程管理地址-->
                     <dockerHost>${docker.host}</dockerHost>

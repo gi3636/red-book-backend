@@ -6,6 +6,8 @@ import com.example.red.book.entity.User;
 import com.example.red.book.model.form.LoginForm;
 import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +29,7 @@ import java.util.Map;
  * @author franky
  * @since 2022-08-29
  */
+@Api(tags = "用户模块")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -34,13 +37,17 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @ApiOperation(value = "用户资料更新")
     @PostMapping("update")
-    public CommonResult<Boolean> updateUser(@Validated @RequestBody UserVO userVO){
+    public CommonResult<Boolean> updateUser(@Validated @RequestBody UserVO userVO) {
         User user = new User();
-        BeanUtils.copyProperties(userVO,user);
+        BeanUtils.copyProperties(userVO, user);
         boolean isSuccess = userService.updateById(user);
-        return CommonResult.success(isSuccess);
+        if (!isSuccess) {
+            return CommonResult.failed("修改失败");
+        }
+        return CommonResult.success(null);
     }
-   
+
 }
 

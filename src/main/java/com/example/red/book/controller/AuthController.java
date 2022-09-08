@@ -6,6 +6,7 @@ import com.example.red.book.model.form.LoginForm;
 import com.example.red.book.model.form.RegisterForm;
 import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.service.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
  * @author franky
  * @since 2022-08-29
  */
+
+@Api(tags = "授权模块")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

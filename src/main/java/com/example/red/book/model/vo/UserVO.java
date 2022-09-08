@@ -12,9 +12,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UserVO {
 
-    @NotNull(message = "id不能为空" )
+    @NotNull(message = "id不能为空")
     @ApiModelProperty("用户id")
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("用户名")
     private String username;
