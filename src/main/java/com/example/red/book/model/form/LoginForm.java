@@ -9,11 +9,11 @@ import javax.validation.constraints.NotBlank;
 public class LoginForm {
 
     @NotBlank(message = "用户名不能为空")
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "用户名", example = "franky")
     private String username;
 
     @NotBlank(message = "密码不能为空")
-    @ApiModelProperty(value = "密码")
+    @ApiModelProperty(value = "密码", example = "123123")
     private String password;
 
 }

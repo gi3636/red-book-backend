@@ -29,6 +29,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String requestURI = request.getRequestURI().replaceAll("/+", "/");
+        log.info("请求链接: {}", requestURI);
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         //有注解就直接放行
         WhiteList methodAnnotation = handlerMethod.getMethodAnnotation(WhiteList.class);
@@ -40,8 +42,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = request.getHeader("token");
-        String requestURI = request.getRequestURI().replaceAll("/+", "/");
-        log.info("请求链接: {}", requestURI);
         //判断是否获是swagger api的资料
         if (!(handler instanceof HandlerMethod)) {
             return true;

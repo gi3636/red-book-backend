@@ -49,11 +49,11 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor())
-
                 .addPathPatterns("/**")
                 .excludePathPatterns("/")
                 .excludePathPatterns("/v2/api-docs")
                 .excludePathPatterns("/v3/api-docs")
+                .excludePathPatterns("/v3/api-docs/**")
                 .excludePathPatterns("/swagger-ui/")
                 .excludePathPatterns("/swagger-resources")
                 .excludePathPatterns("/swagger-resources/**")
