@@ -1,11 +1,13 @@
 package com.example.red.book.common.api;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * 通用返回对象
  * Created by macro on 2019/4/19.
  */
+@Data
 public class CommonResult<T> {
 
     @ApiModelProperty("返回码")

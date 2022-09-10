@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -32,7 +33,7 @@ public class UserVO {
     private Integer sex;
 
     @ApiModelProperty("生日")
-    private String birthday;
+    private Date birthday;
 
     @ApiModelProperty("国家")
     private String country;
