@@ -55,4 +55,12 @@ public class UserManager extends ServiceImpl<UserMapper, User> {
         return user;
     }
 
+    public void updateUserCache(User user) {
+        if (user == null) {
+            throw GlobalException.from("user 不能为空");
+        }
+        getUserByCache(user.getUsername());
+        String key = userKey + user.getUsername();
+        redisService.set(key, user, RedisConstant.REDIS_EXPIRE);
+    }
 }

@@ -20,4 +20,6 @@ public interface UserService extends IService<User> {
     UserVO login(String username, String password);
 
     Boolean register(RegisterForm registerForm);
+
+    Boolean updateUserById(UserVO userVO);
 }

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
@@ -41,6 +42,19 @@ public class AuthInterceptor implements HandlerInterceptor {
             log.info("入参: {}", requestWrapper.getBodyString());
         } catch (Exception e) {
             log.error("HttpInterceptor preHandle error", e);
+        }
+    }
+
+    public void saveSessionData(HttpServletRequest request , String token) {
+        try {
+            HttpSession session = request.getSession();
+            Long id = jwtTokenUtil.getIdFromToken(token);
+            String username = jwtTokenUtil.getUserNameFromToken(token);
+            session.setAttribute("id",id);
+            session.setAttribute("username",username);
+            log.info("用户：{}, token:{}", username, token);
+        } catch (Exception e) {
+            log.error("saveId error", e);
         }
     }
 
@@ -72,8 +86,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (!jwtTokenUtil.validateToken(token)) {
             throw GlobalException.from(ResultCode.UNAUTHORIZED);
         }
-        String username = jwtTokenUtil.getUserNameFromToken(token);
-        log.info("用户：{}, token:{}", username, token);
+        saveSessionData(request,token);
         return true;
     }
 

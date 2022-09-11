@@ -77,4 +77,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return result > 0;
     }
 
+    @Override
+    public Boolean updateUserById(UserVO userVO) {
+        User user = new User();
+        BeanUtils.copyProperties(userVO, user);
+        boolean isSuccess = this.updateById(user);
+        user = this.getById(user.getId());
+        if (isSuccess) {
+            //更新缓存
+            userManager.updateUserCache(user);
+        }
+        return isSuccess;
+    }
+
 }

@@ -6,6 +6,7 @@ import com.example.red.book.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,10 +27,12 @@ import java.util.Map;
  * HMACSHA512(base64UrlEncode(header) + "." +base64UrlEncode(payload),secret)
  * Created by macro on 2018/4/26.
  */
+@Slf4j
 @Component
 public class JwtTokenUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
     private static final String CLAIM_KEY_USERNAME = "sub";
+    private static final String CLAIM_KEY_ID = "id";
     private static final String CLAIM_KEY_CREATED = "created";
     @Value("${jwt.secret}")
     private String secret;
@@ -60,7 +63,7 @@ public class JwtTokenUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            LOGGER.info("JWT格式验证失败:{}", token);
+            LOGGER.info("JWT格式验证失败:{}", e);
         }
         return claims;
     }
@@ -87,10 +90,26 @@ public class JwtTokenUtil {
     }
 
     /**
+     * 从token中获取id
+     */
+    public Long getIdFromToken(String token) {
+        Long id;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            id = Long.valueOf(claims.get(CLAIM_KEY_ID).toString());
+        } catch (Exception e) {
+            log.info("claims.getSubject: {}",e);
+            id = null;
+        }
+        return id;
+    }
+
+
+    /**
      * 验证token是否还有效
      *
      * @param token 客户端传入的token
-     * @param User  从数据库中查询出来的用户信息
+     * @param user  从数据库中查询出来的用户信息
      */
     public boolean validateToken(String token, User user) {
         String username = getUserNameFromToken(token);
@@ -136,8 +155,10 @@ public class JwtTokenUtil {
      * 根据用户信息生成token
      */
     public String generateToken(User user) {
+        log.info("user:"+user);
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, user.getUsername());
+        claims.put(CLAIM_KEY_ID, user.getId());
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
