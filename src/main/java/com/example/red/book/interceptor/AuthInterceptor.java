@@ -38,7 +38,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         try {
             //获取请求参数
             RequestWrapper requestWrapper = new RequestWrapper(request);
-            log.info("入参： {}", requestWrapper.getBodyString());
+            log.info("入参: {}", requestWrapper.getBodyString());
         } catch (Exception e) {
             log.error("HttpInterceptor preHandle error", e);
         }

@@ -27,7 +27,7 @@ public class ResponseInterceptor implements ResponseBodyAdvice<Object> {
         if (body instanceof CommonResult) {
             CommonResult result = (CommonResult) body;
             if (result != null) {
-                log.info("返回结果： {}", result);
+                log.info("返回结果: {}", result);
             }
             //这里可以对返回值进行修改二次封装等操作
         }

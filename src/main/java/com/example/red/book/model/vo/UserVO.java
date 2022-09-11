@@ -30,7 +30,7 @@ public class UserVO {
     private String avatar;
 
     @ApiModelProperty("性别;1:男  0:女  2:保密")
-    private Integer sex;
+    private String sex;
 
     @ApiModelProperty("生日")
     private Date birthday;
