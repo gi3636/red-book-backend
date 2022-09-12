@@ -16,14 +16,14 @@ import javax.validation.constraints.NotNull;
 public class RegisterForm {
 
     @NotBlank(message = "用户名不能为空")
-    @ApiModelProperty(value = "用户名", example = "franky")
+    @ApiModelProperty(value = "用户名", example = "franky" ,required = true)
     private String username;
 
     @NotBlank(message = "密码不能为空")
-    @ApiModelProperty(value = "密码", example = "123123")
+    @ApiModelProperty(value = "密码", example = "123123",required = true)
     private String password;
 
     @NotBlank(message = "确认密码不能为空")
-    @ApiModelProperty(value = "确认密码", example = "123123")
+    @ApiModelProperty(value = "确认密码", example = "123123",required = true)
     private String confirmPassword;
 }
