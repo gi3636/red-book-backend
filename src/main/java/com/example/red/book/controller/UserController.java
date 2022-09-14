@@ -2,7 +2,7 @@ package com.example.red.book.controller;
 
 
 import com.example.red.book.common.api.CommonResult;
-import com.example.red.book.model.vo.UserVO;
+import com.example.red.book.model.form.UserUpdateForm;
 import com.example.red.book.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,12 +39,10 @@ public class UserController {
 
     @ApiOperation(value = "用户资料更新")
     @PostMapping("update")
-    public CommonResult<Boolean> updateUser(@Validated @RequestBody UserVO userVO) {
+    public CommonResult<Boolean> updateUser(@Validated @RequestBody UserUpdateForm userUpdateForms) {
         Long id = (Long) request.getSession().getAttribute("id");
-        if (!Objects.equals(userVO.getId(), id)){
-            return CommonResult.failed("无权限");
-        }
-        boolean isSuccess = userService.updateUserById(userVO);
+        userUpdateForms.setId(id);
+        boolean isSuccess = userService.updateUserById(userUpdateForms);
         if (!isSuccess) {
             return CommonResult.failed("修改失败");
         }

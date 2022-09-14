@@ -42,16 +42,11 @@ public class UserManager extends ServiceImpl<UserMapper, User> {
     }
 
 
-    public User getUserByCache(String username) {
+    public User getUser(String username) {
         if (username == null) {
             throw GlobalException.from("username 不能为空");
         }
-        String key = userKey + username;
-        User user = (User) redisService.get(key);
-        if (user != null) {
-            return user;
-        }
-        user = this.getAndSetCacheByUsername(username);
+        User user = this.getAndSetCacheByUsername(username);
         return user;
     }
 
@@ -59,7 +54,7 @@ public class UserManager extends ServiceImpl<UserMapper, User> {
         if (user == null) {
             throw GlobalException.from("user 不能为空");
         }
-        getUserByCache(user.getUsername());
+        getUser(user.getUsername());
         String key = userKey + user.getUsername();
         redisService.set(key, user, RedisConstant.REDIS_EXPIRE);
     }

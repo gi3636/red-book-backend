@@ -1,4 +1,5 @@
 package com.example.red.book.service.impl;
+import java.util.Date;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,6 +9,7 @@ import com.example.red.book.entity.User;
 import com.example.red.book.manager.UserManager;
 import com.example.red.book.mapper.UserMapper;
 import com.example.red.book.model.form.RegisterForm;
+import com.example.red.book.model.form.UserUpdateForm;
 import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.util.JwtTokenUtil;
 import com.example.red.book.service.UserService;
@@ -40,7 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     //密码需要客户端加密后传
     public UserVO login(String username, String password) {
         //获取缓存信息
-        User user = userManager.getUserByCache(username);
+        User user = userManager.getUser(username);
         if (user == null) {
             throw GlobalException.from(ResultCode.USER_NOT_FOUND);
         }
@@ -78,16 +80,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Boolean updateUserById(UserVO userVO) {
+    public Boolean updateUserById(UserUpdateForm userUpdateForm) {
         User user = new User();
-        BeanUtils.copyProperties(userVO, user);
-        boolean isSuccess = this.updateById(user);
-        user = this.getById(user.getId());
-        if (isSuccess) {
-            //更新缓存
-            userManager.updateUserCache(user);
-        }
-        return isSuccess;
+        user.setId(userUpdateForm.getId());
+        user.setMobile(userUpdateForm.getMobile());
+        user.setNickname(userUpdateForm.getNickname());
+        user.setAvatar(userUpdateForm.getAvatar());
+        user.setSex(userUpdateForm.getSex());
+        user.setCountry(userUpdateForm.getCountry());
+        user.setCity(userUpdateForm.getCity());
+        user.setDescription(userUpdateForm.getDescription());
+        user.setCover(userUpdateForm.getCover());
+        return this.updateById(user);
     }
 
 }
