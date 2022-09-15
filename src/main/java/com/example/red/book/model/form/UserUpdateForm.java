@@ -1,10 +1,9 @@
 package com.example.red.book.model.form;
 
 
+import com.example.red.book.model.enums.SexEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -28,8 +27,8 @@ public class UserUpdateForm {
     private String avatar;
 
     @Size(min = 0, max = 2, message = "性别只能是0,1或2")
-    @ApiModelProperty("性别 0是保密 1是男 2是女")
-    private String sex;
+    @ApiModelProperty("性别 0是保密 MAN是男 WOMAN是女")
+    private SexEnum sex;
 
     @Past(message = "必须为过去的时间")
     @ApiModelProperty("生日")

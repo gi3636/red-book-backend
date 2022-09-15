@@ -89,7 +89,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setNickname(userUpdateForm.getNickname());
         user.setAvatar(userUpdateForm.getAvatar());
         //TODO-性别能否直接定义枚举？这样可以限制前端传的类型，包括在代码中使用也方便一点，唯一的坏处就是保存到数据库的时候需要转一下
-        user.setSex(userUpdateForm.getSex());
+        if (userUpdateForm.getSex() != null) {
+            //user.setSex(userUpdateForm.getSex().getIndex());
+        }
         user.setCountry(userUpdateForm.getCountry());
         user.setCity(userUpdateForm.getCity());
         user.setDescription(userUpdateForm.getDescription());
