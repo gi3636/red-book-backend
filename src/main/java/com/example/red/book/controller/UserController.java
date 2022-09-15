@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Objects;
 
 /**
  * <p>
@@ -39,8 +38,13 @@ public class UserController {
 
     @ApiOperation(value = "用户资料更新")
     @PostMapping("update")
+    //TODO-Form入参用notblank之类的注解防止用户传参错误，以及手机号的正则表达式之类的，都要校验
+    //TODO-方法名称如果在usercontoller里面 是不是可以直接叫update？ 这个你自己考虑比如你新建了一张表叫goods，你不会商品名称叫goods_name吧？
     public CommonResult<Boolean> updateUser(@Validated @RequestBody UserUpdateForm userUpdateForms) {
+        //TODO-写一个工具类来获取当前登录人的用户信息，获取不到就抛出异常
         Long id = (Long) request.getSession().getAttribute("id");
+        //TODO-这里有一个问题就是id字段前端不用传的，所以在form里面定义是不是一个合适的方式，我认为是不合适的。是不是应该去掉id字段，然后userService
+        //新增入参，或者这个id直接在service层获取，或者方法加一个字段叫id，这里主要是告诉你入参混用会导致接口混乱，处理方式有很多种，各有各的好处跟麻烦的地方。
         userUpdateForms.setId(id);
         boolean isSuccess = userService.updateUserById(userUpdateForms);
         if (!isSuccess) {

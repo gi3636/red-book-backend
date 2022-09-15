@@ -1,5 +1,4 @@
 package com.example.red.book.service.impl;
-import java.util.Date;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,8 +10,8 @@ import com.example.red.book.mapper.UserMapper;
 import com.example.red.book.model.form.RegisterForm;
 import com.example.red.book.model.form.UserUpdateForm;
 import com.example.red.book.model.vo.UserVO;
-import com.example.red.book.util.JwtTokenUtil;
 import com.example.red.book.service.UserService;
+import com.example.red.book.util.JwtTokenUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,6 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setMobile(userUpdateForm.getMobile());
         user.setNickname(userUpdateForm.getNickname());
         user.setAvatar(userUpdateForm.getAvatar());
+        //TODO-性别能否直接定义枚举？这样可以限制前端传的类型，包括在代码中使用也方便一点，唯一的坏处就是保存到数据库的时候需要转一下
         user.setSex(userUpdateForm.getSex());
         user.setCountry(userUpdateForm.getCountry());
         user.setCity(userUpdateForm.getCity());
