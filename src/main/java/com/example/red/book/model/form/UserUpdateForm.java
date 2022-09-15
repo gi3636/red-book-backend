@@ -26,7 +26,6 @@ public class UserUpdateForm {
     @ApiModelProperty("头像")
     private String avatar;
 
-    @Size(min = 0, max = 2, message = "性别只能是0,1或2")
     @ApiModelProperty("性别 0是保密 MAN是男 WOMAN是女")
     private SexEnum sex;
 

@@ -1,11 +1,13 @@
 package com.example.red.book.model.vo;
 
+import com.example.red.book.model.enums.SexEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
@@ -29,8 +31,9 @@ public class UserVO {
     @ApiModelProperty("头像")
     private String avatar;
 
-    @ApiModelProperty("性别;1:男  0:女  2:保密")
-    private String sex;
+    @Size(min = 0, max = 2, message = "性别只能是0,1或2")
+    @ApiModelProperty("性别 0是保密 MAN是男 WOMAN是女")
+    private SexEnum sex;
 
     @ApiModelProperty("生日")
     private Date birthday;

@@ -7,7 +7,7 @@ public enum SexEnum {
 
 
     MAN(1, "男"),
-    WOMAN(1, "女")
+    WOMAN(2, "女")
     ;
 
     private Integer index;

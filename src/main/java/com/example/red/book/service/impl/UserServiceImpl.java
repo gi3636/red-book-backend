@@ -1,4 +1,6 @@
 package com.example.red.book.service.impl;
+import com.example.red.book.model.enums.SexEnum;
+
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -51,7 +53,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw GlobalException.from(ResultCode.PASSWORD_WRONG);
         }
         UserVO userVo = new UserVO();
-        BeanUtils.copyProperties(user, userVo);
+        userVo.setUsername(user.getUsername());
+        userVo.setMobile(user.getMobile());
+        userVo.setNickname(user.getNickname());
+        userVo.setAvatar(user.getAvatar());
+        userVo.setSex(SexEnum.getByIndex((user.getSex())));
+        userVo.setBirthday(user.getBirthday());
+        userVo.setCountry(user.getCountry());
+        userVo.setCity(user.getCity());
+        userVo.setDescription(user.getDescription());
+        userVo.setCover(user.getCover());
         userVo.setToken(jwtTokenUtil.generateToken(user));
         return userVo;
     }
@@ -83,14 +94,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Boolean updateUserById(UserUpdateForm userUpdateForm) {
         User user = new User();
-        log.info("Text：{}", sessionUtil.getUserId());
         user.setId(sessionUtil.getUserId());
         user.setMobile(userUpdateForm.getMobile());
         user.setNickname(userUpdateForm.getNickname());
         user.setAvatar(userUpdateForm.getAvatar());
         //TODO-性别能否直接定义枚举？这样可以限制前端传的类型，包括在代码中使用也方便一点，唯一的坏处就是保存到数据库的时候需要转一下
         if (userUpdateForm.getSex() != null) {
-            //user.setSex(userUpdateForm.getSex().getIndex());
+            user.setSex(userUpdateForm.getSex().getIndex());
         }
         user.setCountry(userUpdateForm.getCountry());
         user.setCity(userUpdateForm.getCity());
