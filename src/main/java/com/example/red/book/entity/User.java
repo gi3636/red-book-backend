@@ -47,7 +47,7 @@ public class User implements Serializable {
     @ApiModelProperty("头像")
     private String avatar;
 
-    @ApiModelProperty("性别")
+    @ApiModelProperty("性别 0是保密 1是男 2是女")
     private String sex;
 
     @ApiModelProperty("生日")

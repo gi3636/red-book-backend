@@ -4,6 +4,7 @@ package com.example.red.book.interceptor;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.util.JwtTokenUtil;
+import com.example.red.book.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private SessionUtil sessionUtil;
+
     /**
      * 将请求参数转化为Map
      *
@@ -45,13 +49,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
     }
 
-    public void saveSessionData(HttpServletRequest request , String token) {
+    public void saveSessionData(HttpServletRequest request, String token) {
         try {
-            HttpSession session = request.getSession();
             Long id = jwtTokenUtil.getIdFromToken(token);
             String username = jwtTokenUtil.getUserNameFromToken(token);
-            session.setAttribute("id",id);
-            session.setAttribute("username",username);
+            sessionUtil.setAttribute("id", id);
+            sessionUtil.setAttribute("username", username);
             log.info("用户：{}, token:{}", username, token);
         } catch (Exception e) {
             log.error("saveId error", e);
@@ -86,7 +89,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (!jwtTokenUtil.validateToken(token)) {
             throw GlobalException.from(ResultCode.UNAUTHORIZED);
         }
-        saveSessionData(request,token);
+        saveSessionData(request, token);
         return true;
     }
 

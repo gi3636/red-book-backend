@@ -12,6 +12,8 @@ import com.example.red.book.model.form.UserUpdateForm;
 import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.service.UserService;
 import com.example.red.book.util.JwtTokenUtil;
+import com.example.red.book.util.SessionUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,17 +27,17 @@ import org.springframework.stereotype.Service;
  * @since 2022-08-29
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-
     @Autowired
     private UserManager userManager;
 
-
-
+    @Autowired
+    private SessionUtil sessionUtil;
 
     @Override
     //密码需要客户端加密后传
@@ -81,7 +83,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Boolean updateUserById(UserUpdateForm userUpdateForm) {
         User user = new User();
-        user.setId(userUpdateForm.getId());
+        log.info("Text：{}", sessionUtil.getUserId());
+        user.setId(sessionUtil.getUserId());
         user.setMobile(userUpdateForm.getMobile());
         user.setNickname(userUpdateForm.getNickname());
         user.setAvatar(userUpdateForm.getAvatar());
