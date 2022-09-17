@@ -42,8 +42,14 @@ public class Note implements Serializable {
     @ApiModelProperty("笔记内容")
     private String content;
 
+    @ApiModelProperty("是否公开 1是公开，0是个人可见")
+    private Integer isPublic;
+
     @ApiModelProperty("笔记收藏数")
     private Integer followCount;
+
+    @ApiModelProperty("笔记图片,多个图片用逗号分隔")
+    private String images;
 
     @ApiModelProperty("笔记点赞数")
     private Integer likeCount;
@@ -59,6 +65,4 @@ public class Note implements Serializable {
     @ApiModelProperty("是否删除;1是删除，0是不删除")
     @TableLogic
     private Boolean deleted;
-
-
 }

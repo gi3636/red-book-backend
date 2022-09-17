@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-09-17
  */
 @RestController
-@RequestMapping("/red/userNoteFollow")
+@RequestMapping("/api/userNoteFollow")
 public class UserNoteFollowController {
 
 }

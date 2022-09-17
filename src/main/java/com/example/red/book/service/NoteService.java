@@ -2,6 +2,7 @@ package com.example.red.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.red.book.entity.Note;
+import com.example.red.book.model.form.NoteAddForm;
 
 /**
  * <p>
@@ -13,4 +14,7 @@ import com.example.red.book.entity.Note;
  */
 public interface NoteService extends IService<Note> {
 
+    Boolean add(NoteAddForm noteAddForm, Long userId);
+
+    Boolean update(NoteAddForm noteAddForm, Long userId);
 }
