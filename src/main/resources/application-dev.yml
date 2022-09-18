@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/red_book?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
-    password: '!Aa0137989720'
+    password: '123456'
   redis:
     host: localhost # Redis服务器地址
     database: 0 # Redis数据库索引（默认为0）
@@ -17,3 +17,17 @@ logging:
   level:
     root: info
     com.macro.mall: debug
+
+aliyun:
+  sts:
+    endpoint: sts.cn-hangzhou.aliyuncs.com
+    ki: LTAI5t6QoGkprnCHxVprT6j2
+    ks: q7qQ9W7WDg0mfHR4IrtdIqgcuqbdHt
+    #bucket可以在控制台创建，也可以使用java代码创建
+    bucketname: roundteatable-file-buckets
+    roleArn: acs:ram::1961627345815863:role/ramosstest
+  vod:
+    ki: LTAI5tFeHEvGrfLwpA2hJxhX
+    ks: pD0nHpS9js7AZNGwhiUrh1VLU6BF3U
+    templateGroupId: 5969d075d72bebf65b39670f019ed6ed #转码模板组id
+    workflowId: b2cde7eaf99a895b89ab1a88abee0a25 #工作流id
