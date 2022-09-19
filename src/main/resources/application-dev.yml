@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/red_book?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
-    password: '123456'
+    password: '!Aa0137989720'
   redis:
     host: localhost # Redis服务器地址
     database: 0 # Redis数据库索引（默认为0）
@@ -20,11 +20,12 @@ logging:
 
 aliyun:
   sts:
-    endpoint: sts.cn-hangzhou.aliyuncs.com
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    #    endpoint: oss-accelerate.aliyuncs.com
     ki: LTAI5t6QoGkprnCHxVprT6j2
     ks: q7qQ9W7WDg0mfHR4IrtdIqgcuqbdHt
     #bucket可以在控制台创建，也可以使用java代码创建
-    bucketname: roundteatable-file-buckets
+    bucketname: franky123
     roleArn: acs:ram::1961627345815863:role/ramosstest
   vod:
     ki: LTAI5tFeHEvGrfLwpA2hJxhX

@@ -68,8 +68,8 @@ public class AuthController {
     @GetMapping("sts/token")
     public CommonResult<StsToken> getStsToken() {
         // STS接入地址，例如sts.cn-hangzhou.aliyuncs.com。
-        String endpoint = stsProperties.getEndpoint();
-        String AccessKeyId = stsProperties.getKi();
+        String endpoint = "sts.cn-hangzhou.aliyuncs.com";
+        String accessKeyId = stsProperties.getKi();
         String accessKeySecret = stsProperties.getKs();
         // 填写步骤3获取的角色ARN。
         String roleArn = stsProperties.getRoleArn();
@@ -80,7 +80,7 @@ public class AuthController {
             String regionId = "";
             // 添加endpoint。适用于Java SDK 3.12.0及以上版本。
             DefaultProfile.addEndpoint(regionId, "Sts", endpoint);
-            IClientProfile profile = DefaultProfile.getProfile(regionId, AccessKeyId, accessKeySecret);
+            IClientProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessKeySecret);
             DefaultAcsClient client = new DefaultAcsClient(profile);
             final AssumeRoleRequest request = new AssumeRoleRequest();
             request.setSysMethod(MethodType.POST);
