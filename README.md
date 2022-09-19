@@ -20,25 +20,25 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
 + tbl_user 用户表
 
   ```sql
-  CREATE TABLE `tbl_user`
-  (
-      `id`           bigint                                                       NOT NULL AUTO_INCREMENT COMMENT '用户',
-      `username`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
-      `password`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
-      `mobile`       varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '手机号',
-      `nickname`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '昵称;昵称',
-      `avatar`       varchar(255)                                                  DEFAULT NULL COMMENT '头像',
-      `sex`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT '' COMMENT '性别',
-      `birthday`     datetime                                                      DEFAULT NULL COMMENT '生日',
-      `country`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '国家',
-      `city`         varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '城市',
-      `description`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '简介',
-      `cover`        varchar(255)                                                  DEFAULT NULL COMMENT '个人介绍的背景图',
-      `created_time` datetime                                                      DEFAULT NULL COMMENT '创建时间;创建时间',
-      `updated_time` datetime                                                      DEFAULT NULL COMMENT '更新时间;更新时间',
-      `deleted`      tinyint(1) DEFAULT '0' COMMENT '是否删除;1是删除，0是不删除',
-      PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB AUTO_INCREMENT=125878280 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+  DROP TABLE IF EXISTS `tbl_user`;
+  CREATE TABLE `tbl_user`  (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户',
+    `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
+    `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
+    `mobile` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '手机号',
+    `nickname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '昵称;昵称',
+    `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '头像',
+    `sex` int NULL DEFAULT 0 COMMENT '性别 0是保密 1是男 2是女',
+    `birthday` datetime NULL DEFAULT NULL COMMENT '生日',
+    `country` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '国家',
+    `city` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '城市',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '简介',
+    `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '个人介绍的背景图',
+    `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间;创建时间',
+    `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间;更新时间',
+    `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',
+    PRIMARY KEY (`id`) USING BTREE
+  ) ENGINE = InnoDB AUTO_INCREMENT = 125878278 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
   ```
 
 + tbl_comment 评论表
@@ -56,7 +56,7 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
     `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间;更新时间',
     `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',
     PRIMARY KEY (`id`) USING BTREE
-  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '评论表' ROW_FORMAT = Dynamic;
   ```
 
 + tbl_note 笔记表
@@ -67,27 +67,35 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
     `id` bigint NOT NULL COMMENT '笔记Id',
     `user_id` bigint NOT NULL COMMENT '用户Id',
     `title` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '笔记标题',
-    `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '笔记内容',
-    `follow_count` int NULL DEFAULT NULL COMMENT '笔记收藏数',
-    `like_count` int NULL DEFAULT NULL COMMENT '笔记点赞数',
+    `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '笔记内容',
+    `follow_count` int(10) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '笔记收藏数',
+    `like_count` int(10) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '笔记点赞数',
+    `view_count` int NULL DEFAULT NULL COMMENT '浏览数',
+    `images` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '笔记图片,多个图片用逗号分隔',
+    `is_public` int(10) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '是否公开 1是公开，0是个人可见',
     `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间;创建时间',
     `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间;更新时间',
     `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',
     PRIMARY KEY (`id`) USING BTREE
-  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记表' ROW_FORMAT = Dynamic;
+  
   ```
 
-+ tbl_note_image 存储笔记图片的链接
++ tbl_user_note_view 存储笔记观看数
 
   ```sql
-  DROP TABLE IF EXISTS `tbl_note_image`;
-  CREATE TABLE `tbl_note_image`  (
-    `id` bigint NOT NULL COMMENT 'id',
+  DROP TABLE IF EXISTS `tbl_user_note_view`;
+  CREATE TABLE `tbl_user_note_view`  (
+    `id` bigint NOT NULL,
+    `user_id` bigint NOT NULL COMMENT '用户id',
     `note_id` bigint NOT NULL COMMENT '笔记id',
-    `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '图片url',
     PRIMARY KEY (`id`) USING BTREE
-  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记观看数表' ROW_FORMAT = Dynamic;
+  
+  SET FOREIGN_KEY_CHECKS = 1;
   ```
+
+  
 
 + tbl_user_comment_like 存储用户对评论的点赞
 
@@ -99,7 +107,7 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
     `comment_id` bigint NOT NULL COMMENT '评论id',
     `note_id` bigint NOT NULL COMMENT '笔记id',
     PRIMARY KEY (`id`) USING BTREE
-  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '评论点赞数表' ROW_FORMAT = Dynamic;
   ```
 
 + tbl_user_note_follow 存储用户对笔记的收藏
@@ -111,7 +119,7 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
     `user_id` bigint NOT NULL,
     `note_id` bigint NOT NULL,
     PRIMARY KEY (`id`) USING BTREE
-  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记收藏数表' ROW_FORMAT = Dynamic;
   ```
 
 + tbl_user_note_like 存储用户对笔记的点赞
@@ -123,7 +131,7 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
     `user_id` bigint NOT NULL,
     `note_id` bigint NOT NULL,
     PRIMARY KEY (`id`) USING BTREE
-  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记点赞数表' ROW_FORMAT = Dynamic;
   
   ```
 

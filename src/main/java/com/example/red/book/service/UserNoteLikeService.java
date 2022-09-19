@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 笔记点赞数表 服务类
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 public interface UserNoteLikeService extends IService<UserNoteLike> {
 

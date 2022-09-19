@@ -11,29 +11,28 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ * 笔记观看数表
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 @Getter
 @Setter
-@TableName("tbl_note_image")
-@ApiModel(value = "NoteImage对象", description = "")
-public class NoteImage implements Serializable {
+@TableName("tbl_user_note_view")
+@ApiModel(value = "UserNoteView对象", description = "笔记观看数表")
+public class UserNoteView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
+    @ApiModelProperty("用户id")
+    private Long userId;
+
     @ApiModelProperty("笔记id")
     private Long noteId;
-
-    @ApiModelProperty("图片url")
-    private String imageUrl;
 
 
 }

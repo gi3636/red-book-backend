@@ -4,11 +4,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.entity.Note;
 import com.example.red.book.mapper.NoteMapper;
 import com.example.red.book.model.form.NoteAddForm;
-import com.example.red.book.service.NoteImageService;
 import com.example.red.book.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -21,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements NoteService {
 
-    @Autowired
-    NoteImageService noteImageService;
 
     @Override
     public Boolean add(NoteAddForm noteAddForm, Long userId) {

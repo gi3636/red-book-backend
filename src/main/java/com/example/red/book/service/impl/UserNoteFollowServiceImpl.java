@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 笔记收藏数表 服务实现类
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 @Service
 public class UserNoteFollowServiceImpl extends ServiceImpl<UserNoteFollowMapper, UserNoteFollow> implements UserNoteFollowService {

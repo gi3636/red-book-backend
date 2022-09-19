@@ -15,16 +15,16 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ * 评论表
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 @Getter
 @Setter
 @TableName("tbl_comment")
-@ApiModel(value = "Comment对象", description = "")
+@ApiModel(value = "Comment对象", description = "评论表")
 public class Comment implements Serializable {
 
     private static final long serialVersionUID = 1L;

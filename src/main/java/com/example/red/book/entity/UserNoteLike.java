@@ -11,16 +11,16 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ * 笔记点赞数表
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 @Getter
 @Setter
 @TableName("tbl_user_note_like")
-@ApiModel(value = "UserNoteLike对象", description = "")
+@ApiModel(value = "UserNoteLike对象", description = "笔记点赞数表")
 public class UserNoteLike implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,9 +28,12 @@ public class UserNoteLike implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
+    @ApiModelProperty("用户id")
     private Long userId;
 
+    @ApiModelProperty("笔记id")
     private Long noteId;
+
 
 
 }

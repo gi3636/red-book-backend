@@ -15,16 +15,16 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ * 笔记表
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 @Getter
 @Setter
 @TableName("tbl_note")
-@ApiModel(value = "Note对象", description = "")
+@ApiModel(value = "Note对象", description = "笔记表")
 public class Note implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,17 +42,20 @@ public class Note implements Serializable {
     @ApiModelProperty("笔记内容")
     private String content;
 
-    @ApiModelProperty("是否公开 1是公开，0是个人可见")
-    private Integer isPublic;
-
     @ApiModelProperty("笔记收藏数")
     private Integer followCount;
+
+    @ApiModelProperty("笔记点赞数")
+    private Integer likeCount;
+
+    @ApiModelProperty("浏览数")
+    private Integer viewCount;
 
     @ApiModelProperty("笔记图片,多个图片用逗号分隔")
     private String images;
 
-    @ApiModelProperty("笔记点赞数")
-    private Integer likeCount;
+    @ApiModelProperty("是否公开 1是公开，0是个人可见")
+    private Integer isPublic;
 
     @ApiModelProperty("创建时间;创建时间")
     @TableField(fill = FieldFill.INSERT)
@@ -65,4 +68,6 @@ public class Note implements Serializable {
     @ApiModelProperty("是否删除;1是删除，0是不删除")
     @TableLogic
     private Boolean deleted;
+
+
 }

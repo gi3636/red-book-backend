@@ -1,15 +1,15 @@
 package com.example.red.book.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.red.book.entity.UserNoteFollow;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 笔记收藏数表 服务类
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 public interface UserNoteFollowService extends IService<UserNoteFollow> {
 

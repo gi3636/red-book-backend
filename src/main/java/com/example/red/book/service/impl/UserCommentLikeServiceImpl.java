@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 评论点赞数表 服务实现类
  * </p>
  *
  * @author franky
- * @since 2022-09-17
+ * @since 2022-09-19
  */
 @Service
 public class UserCommentLikeServiceImpl extends ServiceImpl<UserCommentLikeMapper, UserCommentLike> implements UserCommentLikeService {
