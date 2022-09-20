@@ -5,7 +5,12 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
+import com.example.red.book.common.api.CommonResult;
+import com.example.red.book.common.api.ResultCode;
+import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.config.StsProperties;
+import com.example.red.book.model.vo.FileVO;
+import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +23,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -31,18 +38,26 @@ public class FileController {
     private StsProperties stsProperties;
 
 
+    @Autowired
+    private SessionUtil sessionUtil;
+
     @PostMapping("upload")
-    public void upload(@RequestParam("files") MultipartFile[] files) throws IOException {
+    public CommonResult<FileVO> upload(@RequestParam("files") MultipartFile[] files) throws IOException {
         String endpoint = stsProperties.getEndpoint();
         String accessKeyId = stsProperties.getKi();
         String accessKeySecret = stsProperties.getKs();
         String bucketName = stsProperties.getBucketName();
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        List<String> urls = new ArrayList<>();
         for (MultipartFile file : files) {
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = sdf.format(new Date());
             log.info("文件:{}", file.getInputStream());
             log.info("文件名 {}", file.getOriginalFilename());
             log.info("文件大小 {}", file.getSize());
-            String objectName = file.getOriginalFilename();
+
+            String objectName = sessionUtil.getUserId() + "/" + dateString + "/" + file.getOriginalFilename();
 
             try {
                 // 创建InitiateMultipartUploadRequest对象。
@@ -120,23 +135,19 @@ public class FileController {
                 // completeMultipartUploadRequest.setHeaders(headers);
                 // 完成分片上传。
                 CompleteMultipartUploadResult completeMultipartUploadResult = ossClient.completeMultipartUpload(completeMultipartUploadRequest);
-                System.out.println(completeMultipartUploadResult.getETag());
+                log.info(completeMultipartUploadResult.getETag());
+                urls.add("https://" + bucketName + "." + endpoint + "/" + objectName);
             } catch (OSSException oe) {
-                System.out.println("Caught an OSSException, which means your request made it to OSS, "
-                        + "but was rejected with an error response for some reason.");
-                System.out.println("Error Message:" + oe.getErrorMessage());
-                System.out.println("Error Code:" + oe.getErrorCode());
-                System.out.println("Request ID:" + oe.getRequestId());
-                System.out.println("Host ID:" + oe.getHostId());
+                log.error("Error Message:" + oe.getErrorMessage());
+                log.error("Error Code:" + oe.getErrorCode());
+                log.error("Request ID:" + oe.getRequestId());
+                log.error("Host ID:" + oe.getHostId());
             } catch (ClientException ce) {
-                System.out.println("Caught an ClientException, which means the client encountered "
-                        + "a serious internal problem while trying to communicate with OSS, "
-                        + "such as not being able to access the network.");
-                System.out.println("Error Message:" + ce.getMessage());
+                log.error("Error Message:" + ce.getMessage());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw GlobalException.from(ResultCode.UPLOAD_ERROR);
             }
         }
-
+        return CommonResult.success(new FileVO(urls));
     }
 }

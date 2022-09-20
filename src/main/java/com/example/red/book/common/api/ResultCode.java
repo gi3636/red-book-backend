@@ -16,7 +16,7 @@ public enum ResultCode implements IErrorCode {
     PASSWORD_WRONG(20002, "密码错误"),
     USER_EXITS(20003, "用户已存在"),
     PASSWORD_NOT_SAME(20004, "密码不一致"),
-    GET_STS_TOKEN_ERROR(20100, "获取stsToken失败");
+    GET_STS_TOKEN_ERROR(20100, "获取stsToken失败"), UPLOAD_ERROR(20101, "上传文件失败");
 
 
     private long code;
