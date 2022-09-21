@@ -19,8 +19,6 @@ import lombok.Setter;
  * @author franky
  * @since 2022-09-02
  */
-@Getter
-@Setter
 @TableName("tbl_user")
 @ApiModel(value = "User对象", description = "用户表")
 @Data

@@ -1,4 +1,5 @@
 package com.example.red.book.service.impl;
+
 import com.example.red.book.model.enums.SexEnum;
 
 
@@ -9,14 +10,13 @@ import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.entity.User;
 import com.example.red.book.manager.UserManager;
 import com.example.red.book.mapper.UserMapper;
-import com.example.red.book.model.form.RegisterForm;
-import com.example.red.book.model.form.UserUpdateForm;
+import com.example.red.book.model.param.RegisterParam;
+import com.example.red.book.model.param.UserUpdateParam;
 import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.service.UserService;
 import com.example.red.book.util.JwtTokenUtil;
 import com.example.red.book.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,22 +68,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Boolean register(RegisterForm registerForm) {
-        if (!registerForm.getPassword().equals(registerForm.getConfirmPassword())) {
+    public Boolean register(RegisterParam registerParam) {
+        if (!registerParam.getPassword().equals(registerParam.getConfirmPassword())) {
             throw GlobalException.from(ResultCode.PASSWORD_NOT_SAME);
         }
 
         //查询是否有用户
-        User existUser = userManager.getAndSetCacheByUsername(registerForm.getUsername());
+        User existUser = userManager.getAndSetCacheByUsername(registerParam.getUsername());
         if (existUser != null) {
             throw GlobalException.from(ResultCode.USER_EXITS);
         }
 
         User user = new User();
         //将密码进行加密操作
-        String encodePassword = DigestUtil.md5Hex(registerForm.getPassword());
-        user.setUsername(registerForm.getUsername());
-        user.setMobile(registerForm.getUsername());
+        String encodePassword = DigestUtil.md5Hex(registerParam.getPassword());
+        user.setUsername(registerParam.getUsername());
+        user.setMobile(registerParam.getUsername());
         user.setPassword(encodePassword);
         user.setAvatar("https://avatars1.githubusercontent.com/u/" + (int) (Math.random() * 1000));
         user.setNickname("吃饱没事干");
@@ -92,20 +92,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Boolean updateUserById(UserUpdateForm userUpdateForm) {
+    public Boolean updateUserById(UserUpdateParam userUpdateParam) {
         User user = new User();
         user.setId(sessionUtil.getUserId());
-        user.setMobile(userUpdateForm.getMobile());
-        user.setNickname(userUpdateForm.getNickname());
-        user.setAvatar(userUpdateForm.getAvatar());
+        user.setMobile(userUpdateParam.getMobile());
+        user.setNickname(userUpdateParam.getNickname());
+        user.setAvatar(userUpdateParam.getAvatar());
         //TODO-性别能否直接定义枚举？这样可以限制前端传的类型，包括在代码中使用也方便一点，唯一的坏处就是保存到数据库的时候需要转一下
-        if (userUpdateForm.getSex() != null) {
-            user.setSex(userUpdateForm.getSex().getIndex());
+        if (userUpdateParam.getSex() != null) {
+            user.setSex(userUpdateParam.getSex().getIndex());
         }
-        user.setCountry(userUpdateForm.getCountry());
-        user.setCity(userUpdateForm.getCity());
-        user.setDescription(userUpdateForm.getDescription());
-        user.setCover(userUpdateForm.getCover());
+        user.setCountry(userUpdateParam.getCountry());
+        user.setCity(userUpdateParam.getCity());
+        user.setDescription(userUpdateParam.getDescription());
+        user.setCover(userUpdateParam.getCover());
         return this.updateById(user);
     }
 

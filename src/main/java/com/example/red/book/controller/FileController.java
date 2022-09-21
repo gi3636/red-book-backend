@@ -12,6 +12,7 @@ import com.example.red.book.config.StsProperties;
 import com.example.red.book.model.vo.FileVO;
 import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,17 +31,17 @@ import java.util.Date;
 import java.util.List;
 
 @Slf4j
-@Api("文件模块")
+@Api(tags = "文件模块")
 @RestController
 @RequestMapping("/api/file")
 public class FileController {
     @Autowired
     private StsProperties stsProperties;
 
-
     @Autowired
     private SessionUtil sessionUtil;
 
+    @ApiOperation(value = "上传文件")
     @PostMapping("upload")
     public CommonResult<FileVO> upload(@RequestParam("files") MultipartFile[] files) throws IOException {
         String endpoint = stsProperties.getEndpoint();
@@ -48,6 +49,9 @@ public class FileController {
         String accessKeySecret = stsProperties.getKs();
         String bucketName = stsProperties.getBucketName();
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        if (files == null || files.length == 0) {
+            throw GlobalException.from(ResultCode.FILE_EMPTY);
+        }
         List<String> urls = new ArrayList<>();
         for (MultipartFile file : files) {
             //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

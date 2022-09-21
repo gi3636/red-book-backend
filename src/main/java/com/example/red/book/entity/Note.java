@@ -6,10 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +24,8 @@ import lombok.Setter;
  * @author franky
  * @since 2022-09-19
  */
-@Getter
-@Setter
+
+@Data
 @TableName("tbl_note")
 @ApiModel(value = "Note对象", description = "笔记表")
 public class Note implements Serializable {

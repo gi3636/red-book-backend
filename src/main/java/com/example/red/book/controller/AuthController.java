@@ -12,8 +12,8 @@ import com.example.red.book.common.api.CommonResult;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.config.StsProperties;
-import com.example.red.book.model.form.LoginForm;
-import com.example.red.book.model.form.RegisterForm;
+import com.example.red.book.model.param.LoginParam;
+import com.example.red.book.model.param.RegisterParam;
 import com.example.red.book.model.vo.StsToken;
 import com.example.red.book.model.vo.UserVO;
 import com.example.red.book.service.UserService;
@@ -47,16 +47,16 @@ public class AuthController {
 
     @ApiOperation(value = "用户登录")
     @PostMapping("login")
-    public CommonResult<UserVO> login(@Validated @RequestBody LoginForm loginForm) {
-        UserVO userVo = userService.login(loginForm.getUsername(), loginForm.getPassword());
+    public CommonResult<UserVO> login(@Validated @RequestBody LoginParam loginParam) {
+        UserVO userVo = userService.login(loginParam.getUsername(), loginParam.getPassword());
         return CommonResult.success(userVo);
     }
 
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<ObjectUtils.Null> register(@Validated @RequestBody RegisterForm registerForm) {
-        Boolean registerSuccess = userService.register(registerForm);
+    public CommonResult<ObjectUtils.Null> register(@Validated @RequestBody RegisterParam registerParam) {
+        Boolean registerSuccess = userService.register(registerParam);
         if (!registerSuccess) {
             return CommonResult.failed();
         }
