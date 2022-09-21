@@ -22,5 +22,5 @@ public interface UserService extends IService<User> {
 
     Boolean register(RegisterParam registerParam);
 
-    Boolean updateUserById(UserUpdateParam userVO);
+    Boolean updateUserById(UserUpdateParam userUpdateParam);
 }
