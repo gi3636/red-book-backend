@@ -3,6 +3,7 @@ package com.example.red.book.controller;
 
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.CommonResult;
+import com.example.red.book.constant.NoteMqConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteUpdateForm;
@@ -13,6 +14,7 @@ import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,9 @@ public class NoteController {
     @Autowired
     private SessionUtil sessionUtil;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @ApiOperation(value = "添加笔记")
     @PostMapping("add")
     public CommonResult<Void> add(@Validated @RequestBody NoteAddForm noteAddForm) {
@@ -57,6 +62,21 @@ public class NoteController {
     @PostMapping("update")
     public CommonResult<CommonPage<Note>> update(@RequestBody NoteUpdateForm noteQueryParam) {
         return CommonResult.success(null);
+    }
+
+    @ApiOperation(value = "测试")
+    @GetMapping("test")
+    public void testSendTopicExchange() {
+        // 交换机名称
+        String exchangeName = NoteMqConstant.EXCHANGE_NAME;
+        // 消息
+        Note note = new Note();
+        note.setId(1L);
+        note.setTitle("测试");
+        note.setContent("测试");
+        note.setUserId(1L);
+        // 发送消息
+        rabbitTemplate.convertAndSend(exchangeName, NoteMqConstant.INSERT_KEY, note);
     }
 }
 
