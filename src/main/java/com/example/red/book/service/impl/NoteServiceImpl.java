@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.entity.Note;
 import com.example.red.book.mapper.NoteMapper;
-import com.example.red.book.model.param.NoteAddParam;
-import com.example.red.book.model.param.NoteQueryParam;
+import com.example.red.book.model.form.NoteAddForm;
+import com.example.red.book.model.form.NoteQueryForm;
 import com.example.red.book.service.NoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,36 +26,36 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
 
 
     @Override
-    public Boolean add(NoteAddParam noteAddParam, Long userId) {
+    public Boolean add(NoteAddForm noteAddForm, Long userId) {
         Note note = new Note();
         note.setUserId(userId);
-        note.setTitle(noteAddParam.getTitle());
-        note.setContent(noteAddParam.getContent());
-        note.setIsPublic(noteAddParam.getIsPublic());
-        note.setImages(noteAddParam.getImages());
+        note.setTitle(noteAddForm.getTitle());
+        note.setContent(noteAddForm.getContent());
+        note.setIsPublic(noteAddForm.getIsPublic());
+        note.setImages(noteAddForm.getImages());
         return this.baseMapper.insert(note) > 0;
     }
 
     @Override
-    public Boolean update(NoteAddParam noteAddParam, Long userId) {
+    public Boolean update(NoteAddForm noteAddForm, Long userId) {
         Note note = new Note();
         note.setUserId(userId);
-        note.setTitle(noteAddParam.getTitle());
-        note.setContent(noteAddParam.getContent());
-        note.setIsPublic(noteAddParam.getIsPublic());
-        note.setImages(noteAddParam.getImages());
+        note.setTitle(noteAddForm.getTitle());
+        note.setContent(noteAddForm.getContent());
+        note.setIsPublic(noteAddForm.getIsPublic());
+        note.setImages(noteAddForm.getImages());
         return this.baseMapper.insert(note) > 0;
     }
 
     @Override
-    public CommonPage<Note> query(NoteQueryParam noteQueryParam) {
+    public CommonPage<Note> query(NoteQueryForm noteQueryForm) {
         LambdaQueryWrapper<Note> wrapper = new LambdaQueryWrapper<Note>()
-                .eq(Note::getIsPublic, noteQueryParam.getIsPublic());
+                .eq(Note::getIsPublic, noteQueryForm.getIsPublic());
 
-        if (noteQueryParam.getUserId() != null) {
-            wrapper.eq(Note::getUserId, noteQueryParam.getUserId());
+        if (noteQueryForm.getUserId() != null) {
+            wrapper.eq(Note::getUserId, noteQueryForm.getUserId());
         }
-        Page<Note> page = new Page<>(noteQueryParam.getCurrentPage(), noteQueryParam.getSize());
+        Page<Note> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
         Page<Note> data = this.baseMapper.selectPage(page, wrapper);
         return CommonPage.restPage(data);
     }

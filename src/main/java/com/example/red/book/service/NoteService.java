@@ -3,8 +3,8 @@ package com.example.red.book.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.entity.Note;
-import com.example.red.book.model.param.NoteAddParam;
-import com.example.red.book.model.param.NoteQueryParam;
+import com.example.red.book.model.form.NoteAddForm;
+import com.example.red.book.model.form.NoteQueryForm;
 
 /**
  * <p>
@@ -16,9 +16,9 @@ import com.example.red.book.model.param.NoteQueryParam;
  */
 public interface NoteService extends IService<Note> {
 
-    Boolean add(NoteAddParam noteAddParam, Long userId);
+    Boolean add(NoteAddForm noteAddForm, Long userId);
 
-    Boolean update(NoteAddParam noteAddParam, Long userId);
+    Boolean update(NoteAddForm noteAddForm, Long userId);
 
-    CommonPage<Note> query(NoteQueryParam noteQueryParam);
+    CommonPage<Note> query(NoteQueryForm noteQueryForm);
 }

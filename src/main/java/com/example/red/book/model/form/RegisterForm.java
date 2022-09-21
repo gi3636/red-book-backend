@@ -1,4 +1,4 @@
-package com.example.red.book.model.param;
+package com.example.red.book.model.form;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  * @create: 8/13/2021 11:58 AM
  */
 @Data
-public class RegisterParam {
+public class RegisterForm {
 
     @NotBlank(message = "用户名不能为空")
     @ApiModelProperty(value = "用户名", example = "franky", required = true)

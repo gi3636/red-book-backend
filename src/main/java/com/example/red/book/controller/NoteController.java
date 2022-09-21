@@ -4,9 +4,9 @@ package com.example.red.book.controller;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.CommonResult;
 import com.example.red.book.entity.Note;
-import com.example.red.book.model.param.NoteAddParam;
-import com.example.red.book.model.param.NoteUpdateParam;
-import com.example.red.book.model.param.NoteQueryParam;
+import com.example.red.book.model.form.NoteAddForm;
+import com.example.red.book.model.form.NoteUpdateForm;
+import com.example.red.book.model.form.NoteQueryForm;
 import com.example.red.book.service.NoteService;
 import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
@@ -37,8 +37,8 @@ public class NoteController {
 
     @ApiOperation(value = "添加笔记")
     @PostMapping("add")
-    public CommonResult<ObjectUtils.Null> add(@Validated @RequestBody NoteAddParam noteAddParam) {
-        Boolean isSuccess = noteService.add(noteAddParam, sessionUtil.getUserId());
+    public CommonResult<ObjectUtils.Null> add(@Validated @RequestBody NoteAddForm noteAddForm) {
+        Boolean isSuccess = noteService.add(noteAddForm, sessionUtil.getUserId());
         if (!isSuccess) {
             return CommonResult.failed("添加失败");
         }
@@ -47,14 +47,14 @@ public class NoteController {
 
     @ApiOperation(value = "查询笔记")
     @PostMapping("list")
-    public CommonResult<CommonPage<Note>> list(@RequestBody NoteQueryParam noteQueryParam) {
-        CommonPage<Note> noteList = noteService.query(noteQueryParam);
+    public CommonResult<CommonPage<Note>> list(@RequestBody NoteQueryForm noteQueryForm) {
+        CommonPage<Note> noteList = noteService.query(noteQueryForm);
         return CommonResult.success(noteList);
     }
 
     @ApiOperation(value = "修改笔记")
     @PostMapping("update")
-    public CommonResult<CommonPage<Note>> update(@RequestBody NoteUpdateParam noteQueryParam) {
+    public CommonResult<CommonPage<Note>> update(@RequestBody NoteUpdateForm noteQueryParam) {
         return CommonResult.success(null);
     }
 }

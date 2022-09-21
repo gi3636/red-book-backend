@@ -1,4 +1,4 @@
-package com.example.red.book.model.param;
+package com.example.red.book.model.form;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class NoteUpdateParam {
+public class NoteUpdateForm {
 
     @NotBlank(message = "笔记id不能为空")
     @ApiModelProperty("笔记Id")

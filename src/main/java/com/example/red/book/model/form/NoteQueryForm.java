@@ -1,4 +1,4 @@
-package com.example.red.book.model.param;
+package com.example.red.book.model.form;
 
 import com.example.red.book.common.api.PageQueryParam;
 import io.swagger.annotations.ApiModel;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @ApiModel(description = "笔记查询参数对象")
-public class NoteQueryParam extends PageQueryParam {
+public class NoteQueryForm extends PageQueryParam {
 
     @ApiModelProperty("用户Id")
     private Long userId;

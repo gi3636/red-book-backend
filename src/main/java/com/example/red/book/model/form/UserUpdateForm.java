@@ -1,4 +1,4 @@
-package com.example.red.book.model.param;
+package com.example.red.book.model.form;
 
 
 import com.example.red.book.model.enums.SexEnum;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
-public class UserUpdateParam {
+public class UserUpdateForm {
 
     @NotNull(message = "手机号不能为空")
     @Pattern(regexp = "(\\+\\d+)?1[3458]\\d{9}$", message = "手机号格式不正确")

@@ -2,8 +2,8 @@ package com.example.red.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.red.book.entity.User;
-import com.example.red.book.model.param.RegisterParam;
-import com.example.red.book.model.param.UserUpdateParam;
+import com.example.red.book.model.form.RegisterForm;
+import com.example.red.book.model.form.UserUpdateForm;
 import com.example.red.book.model.vo.UserVO;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public interface UserService extends IService<User> {
 
     UserVO login(String username, String password);
 
-    Boolean register(RegisterParam registerParam);
+    Boolean register(RegisterForm registerForm);
 
-    Boolean updateUserById(UserUpdateParam userUpdateParam);
+    Boolean updateUserById(UserUpdateForm userUpdateForm);
 }
