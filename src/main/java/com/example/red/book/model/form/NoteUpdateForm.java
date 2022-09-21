@@ -21,7 +21,7 @@ public class NoteUpdateForm {
     @ApiModelProperty("笔记图片,多个图片用逗号分隔")
     private String images;
 
-    @ApiModelProperty("是否公开 1是公开，0是个人可见")
-    private Integer isPublic;
+    @ApiModelProperty("是否公开")
+    private Boolean isPublic;
 
 }

@@ -5,6 +5,7 @@ import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteQueryForm;
+import com.example.red.book.model.vo.NoteVO;
 
 /**
  * <p>
@@ -20,5 +21,5 @@ public interface NoteService extends IService<Note> {
 
     Boolean update(NoteAddForm noteAddForm, Long userId);
 
-    CommonPage<Note> query(NoteQueryForm noteQueryForm);
+    CommonPage<NoteVO> query(NoteQueryForm noteQueryForm);
 }

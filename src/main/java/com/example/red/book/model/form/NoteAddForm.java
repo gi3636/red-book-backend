@@ -23,9 +23,8 @@ public class NoteAddForm {
     @ApiModelProperty(value = "笔记图片,多个图片用逗号分隔", required = true)
     private String images;
 
-    @Range(min = 0, max = 1, message = "只能是0或1")
     @NotNull(message = "笔记是否公开不能为空")
-    @ApiModelProperty(value = "是否公开 1是公开，0是个人可见", required = true)
-    private Integer isPublic;
+    @ApiModelProperty(value = "是否公开", required = true)
+    private Boolean isPublic;
 
 }

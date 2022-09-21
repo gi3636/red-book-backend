@@ -15,8 +15,7 @@ public class NoteQueryForm extends PageQueryParam {
     @ApiModelProperty("用户Id")
     private Long userId;
 
-    @Range(min = 0, max = 1, message = "只能是0或1")
     @NotNull(message = "笔记是否公开不能为空")
-    @ApiModelProperty("是否公开 1是公开，0是个人可见")
-    private Integer isPublic;
+    @ApiModelProperty("是否公开")
+    private Boolean isPublic;
 }

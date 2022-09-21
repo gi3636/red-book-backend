@@ -8,6 +8,7 @@ import com.example.red.book.entity.Note;
 import com.example.red.book.mapper.NoteMapper;
 import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteQueryForm;
+import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.service.NoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
-    public CommonPage<Note> query(NoteQueryForm noteQueryForm) {
+    public CommonPage<NoteVO> query(NoteQueryForm noteQueryForm) {
         LambdaQueryWrapper<Note> wrapper = new LambdaQueryWrapper<Note>()
                 .eq(Note::getIsPublic, noteQueryForm.getIsPublic());
 
@@ -57,6 +58,12 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         }
         Page<Note> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
         Page<Note> data = this.baseMapper.selectPage(page, wrapper);
-        return CommonPage.restPage(data);
+        Page<NoteVO>  newData = new Page<>();
+        newData.setRecords(NoteVO.convert(data.getRecords()));
+        newData.setTotal(data.getTotal());
+        newData.setCurrent(data.getCurrent());
+        newData.setSize(data.getSize());
+        newData.setPages(data.getPages());
+        return CommonPage.restPage(newData);
     }
 }

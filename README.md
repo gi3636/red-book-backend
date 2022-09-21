@@ -72,7 +72,7 @@ Token 主要的用处是用在安全的方面。除了登录注册之类的接�
     `like_count` int(10) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '笔记点赞数',
     `view_count` int NULL DEFAULT NULL COMMENT '浏览数',
     `images` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '笔记图片,多个图片用逗号分隔',
-    `is_public` int(10) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '是否公开 1是公开，0是个人可见',
+    `is_public` tinyint(1) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '是否公开 1是公开，0是个人可见',
     `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间;创建时间',
     `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间;更新时间',
     `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',

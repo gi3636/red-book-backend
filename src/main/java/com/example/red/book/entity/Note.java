@@ -57,8 +57,8 @@ public class Note implements Serializable {
     @ApiModelProperty("笔记图片,多个图片用逗号分隔")
     private String images;
 
-    @ApiModelProperty("是否公开 1是公开，0是个人可见")
-    private Integer isPublic;
+    @ApiModelProperty("是否公开")
+    private Boolean isPublic;
 
     @ApiModelProperty("创建时间;创建时间")
     @TableField(fill = FieldFill.INSERT)
