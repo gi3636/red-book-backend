@@ -18,7 +18,9 @@ public enum ResultCode implements IErrorCode {
     PASSWORD_NOT_SAME(20004, "密码不一致"),
     GET_STS_TOKEN_ERROR(20100, "获取stsToken失败"),
     UPLOAD_ERROR(20101, "上传文件失败"),
-    FILE_EMPTY(20102, "文件为空");
+    FILE_EMPTY(20102, "文件为空"),
+    CREATED_INDEX_FAILED(20201, "创建索引失败"),
+    INDEX_EXISTS(20202, "索引已存在");
 
 
     private long code;

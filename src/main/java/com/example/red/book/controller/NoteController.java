@@ -60,23 +60,13 @@ public class NoteController {
 
     @ApiOperation(value = "修改笔记")
     @PostMapping("update")
-    public CommonResult<CommonPage<Note>> update(@RequestBody NoteUpdateForm noteQueryParam) {
+    public CommonResult<CommonPage<Note>> update(@RequestBody NoteUpdateForm noteUpdateForm) {
+        Boolean isSuccess = noteService.update(noteUpdateForm, sessionUtil.getUserId());
+        if (!isSuccess) {
+            return CommonResult.failed("修改失败");
+        }
         return CommonResult.success(null);
     }
 
-    @ApiOperation(value = "测试")
-    @GetMapping("test")
-    public void testSendTopicExchange() {
-        // 交换机名称
-        String exchangeName = NoteMqConstant.EXCHANGE_NAME;
-        // 消息
-        Note note = new Note();
-        note.setId(1L);
-        note.setTitle("测试");
-        note.setContent("测试");
-        note.setUserId(1L);
-        // 发送消息
-        rabbitTemplate.convertAndSend(exchangeName, NoteMqConstant.INSERT_KEY, note);
-    }
 }
 

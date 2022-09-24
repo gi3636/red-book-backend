@@ -46,19 +46,25 @@ public class NoteVO {
     private Date createdTime;
 
     public static List<NoteVO> convert(List<Note> records) {
-        return records.stream().map(note -> {
-            NoteVO noteVO = new NoteVO();
-            noteVO.setId(note.getId());
-            noteVO.setUserId(note.getUserId());
-            noteVO.setTitle(note.getTitle());
-            noteVO.setContent(note.getContent());
-            noteVO.setFollowCount(note.getFollowCount());
-            noteVO.setLikeCount(note.getLikeCount());
-            noteVO.setViewCount(note.getViewCount());
-            noteVO.setImages(note.getImages() == null ? new ArrayList<>() : Arrays.asList((note.getImages().split(","))));
-            noteVO.setIsPublic(note.getIsPublic());
-            noteVO.setCreatedTime(note.getCreatedTime());
-            return noteVO;
-        }).collect(Collectors.toList());
+        return records.stream().map(NoteVO::getNoteVO).collect(Collectors.toList());
+    }
+
+    public static NoteVO convert(Note note) {
+        return getNoteVO(note);
+    }
+
+    private static NoteVO getNoteVO(Note note) {
+        NoteVO noteVO = new NoteVO();
+        noteVO.setId(note.getId());
+        noteVO.setUserId(note.getUserId());
+        noteVO.setTitle(note.getTitle());
+        noteVO.setContent(note.getContent());
+        noteVO.setFollowCount(note.getFollowCount());
+        noteVO.setLikeCount(note.getLikeCount());
+        noteVO.setViewCount(note.getViewCount());
+        noteVO.setImages(note.getImages() == null ? new ArrayList<>() : Arrays.asList((note.getImages().split(","))));
+        noteVO.setIsPublic(note.getIsPublic());
+        noteVO.setCreatedTime(note.getCreatedTime());
+        return noteVO;
     }
 }

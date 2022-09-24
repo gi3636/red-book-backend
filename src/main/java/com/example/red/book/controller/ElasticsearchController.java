@@ -8,10 +8,11 @@ import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch._types.mapping.TextProperty;
 import co.elastic.clients.elasticsearch._types.mapping.TypeMapping;
 import co.elastic.clients.elasticsearch.core.*;
-import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
-import co.elastic.clients.elasticsearch.core.bulk.BulkResponseItem;
-import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import co.elastic.clients.transport.endpoints.BooleanResponse;
+import com.example.red.book.common.api.CommonResult;
+import com.example.red.book.common.api.ResultCode;
+import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.config.ElasticSearchClientConfig;
 import com.example.red.book.entity.Note;
 import io.swagger.annotations.Api;
@@ -34,12 +35,17 @@ import java.util.Map;
 public class ElasticsearchController {
 
     @Autowired
-    private ElasticSearchClientConfig elasticSearchClientConfig;
+    private ElasticsearchClient esClient;
     private static final String indexName = "note";
 
 
     @GetMapping("/init")
-    public Boolean createEsIndex() {
+    public CommonResult<Boolean> createEsIndex() throws IOException {
+        BooleanResponse exists = esClient.indices().exists((b) -> b.index(indexName));
+        log.info("index exists:{}", exists.value());
+        if (exists.value()) {
+            throw GlobalException.from(ResultCode.INDEX_EXISTS);
+        }
         //定义文档属性
         Map<String, Property> propertyMap = new HashMap<>();
         propertyMap.put("id", new Property(new KeywordProperty.Builder().build()));
@@ -51,64 +57,29 @@ public class ElasticsearchController {
                 .build();
         try {
             // 创建索引
-            ElasticsearchClient client = elasticSearchClientConfig.elasticsearchClient();
-            CreateIndexResponse createIndexResponse = client.indices().create(b -> b
+            CreateIndexResponse createIndexResponse = esClient.indices().create(b -> b
                     .index(indexName)
                     .mappings(typeMapping)
             );
-            System.out.println("创建索引成功: " + createIndexResponse);
             // 响应状态
-            log.info("增加索引操作 ===={} ", createIndexResponse.acknowledged());
-            log.info("增加索引操作 ===={} ", createIndexResponse.index());
-            log.info("增加索引操作 ===={} ", createIndexResponse.shardsAcknowledged());
+            log.info("增加索引操作 : {} ", createIndexResponse.acknowledged());
         } catch (IOException e) {
-            log.error("es InsertError ---- {}", e.getMessage());
+            log.error("增加索引操作 : {}", e.getMessage());
+            throw GlobalException.from(ResultCode.CREATED_INDEX_FAILED);
         }
-        return true;
-    }
-
-
-    @GetMapping("addDoc")
-    public boolean addDoc() {
-        ElasticsearchClient client = elasticSearchClientConfig.elasticsearchClient();
-        Note note = new Note();
-        note.setId(1L);
-        note.setTitle("测试");
-        note.setContent("测试");
-        note.setUserId(1L);
-        note.setFollowCount(1);
-        note.setLikeCount(1);
-        IndexRequest<Note> request = new IndexRequest.Builder<Note>()
-                .index(indexName)
-                // 设置文档id
-                .id(note.getId() + "")
-                // 设置文档
-                .document(note)
-                // 刷新
-                .refresh(Refresh.True)
-                .build();
-        try {
-            IndexResponse response = client.index(request);
-            log.info("增加文档操作 ===={} ", response.result());
-            System.out.println(response.result().jsonValue());
-            return response.result() != null;
-        } catch (IOException e) {
-            log.error("ElasticUtils-addDoc::{}", e.getMessage(), e);
-            return false;
-        }
+        return CommonResult.success(true);
     }
 
 
     @GetMapping("getDoc")
     public Note searchDoc() {
-        ElasticsearchClient client = elasticSearchClientConfig.elasticsearchClient();
         String id = "1";
         GetRequest request = new GetRequest.Builder()
                 .index(indexName)
                 .id(id)
                 .build();
         try {
-            GetResponse<Note> fileDocumentGetResponse = client.get(request, Note.class);
+            GetResponse<Note> fileDocumentGetResponse = esClient.get(request, Note.class);
             return fileDocumentGetResponse.source();
         } catch (IOException e) {
             log.error("ElasticUtils-searchDoc::{}", e.getMessage(), e);
@@ -119,7 +90,6 @@ public class ElasticsearchController {
 
     @GetMapping("updateDoc")
     public Note updateDoc() {
-        ElasticsearchClient client = elasticSearchClientConfig.elasticsearchClient();
         Note note = new Note();
         note.setId(1L);
         note.setTitle("测试111");
@@ -131,7 +101,7 @@ public class ElasticsearchController {
                 .doc(note)
                 .build();
         try {
-            UpdateResponse<Note> fileDocumentGetResponse = client.update(request, Note.class);
+            UpdateResponse<Note> fileDocumentGetResponse = esClient.update(request, Note.class);
             log.info("更新文档操作 ===={} ", fileDocumentGetResponse.result());
             return null;
         } catch (IOException e) {
@@ -143,14 +113,13 @@ public class ElasticsearchController {
 
     @GetMapping("delDoc")
     public boolean delDoc() {
-        ElasticsearchClient client = elasticSearchClientConfig.elasticsearchClient();
         String id = "1";
         DeleteRequest request = new DeleteRequest.Builder()
                 .index(indexName)
                 .id(id)
                 .build();
         try {
-            DeleteResponse delete = client.delete(request);
+            DeleteResponse delete = esClient.delete(request);
             System.out.println(delete.result().jsonValue());
             log.info("删除文档操作 ===={} ", delete.result());
             return delete.result() != null;
@@ -162,7 +131,6 @@ public class ElasticsearchController {
 
     @GetMapping("addBatchDoc")
     public boolean addBatchDoc() throws IOException {
-        ElasticsearchClient client = elasticSearchClientConfig.elasticsearchClient();
         // 使用 mybatis-plus 获取所有的记录
         List<Note> noteList = new ArrayList<>();
         for (int i = 11; i < 20; i++) {
@@ -196,10 +164,10 @@ public class ElasticsearchController {
 
         // 执行批量插入，并获取是否发生了错误
 
-        BulkResponse bulk = client.bulk(builder.build());
+        BulkResponse bulk = esClient.bulk(builder.build());
         log.info("增加文档操作 ===={} ", bulk.errors());
         log.info("增加文档操作 ===={} ", bulk.items().size());
-        return client.bulk(builder.build()).errors();
+        return esClient.bulk(builder.build()).errors();
     }
 
 }
