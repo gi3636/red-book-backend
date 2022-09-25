@@ -1,22 +1,28 @@
 package com.example.red.book.common.api;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.elasticsearch.client.RestClient;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
-public class ElasticSearchResult {
+public class ElasticSearchResult<T> {
 
-    private RestClient restClient;
+    private Integer pageNum;
+    private Integer pageSize;
+    private Integer totalPage;
+    private Long total;
+    private List<T> list;
 
-    private ElasticsearchTransport elasticsearchTransport;
-
-    private ElasticsearchClient elasticsearchClient;
-
-    public ElasticSearchResult(RestClient restClient, ElasticsearchTransport elasticsearchTransport, ElasticsearchClient elasticsearchClient) {
-        this.restClient = restClient;
-        this.elasticsearchTransport = elasticsearchTransport;
-        this.elasticsearchClient = elasticsearchClient;
+    public ElasticSearchResult(SearchResponse<T> searchResponse, Integer pageNum, Integer pageSize) {
+        this.list = searchResponse.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
+        this.totalPage = (int) (searchResponse.hits().total().value() / pageSize);
+        this.total = searchResponse.hits().total().value();
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
     }
+
 }

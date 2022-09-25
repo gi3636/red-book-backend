@@ -2,20 +2,19 @@ package com.example.red.book.service.impl;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.Refresh;
-import co.elastic.clients.elasticsearch.core.IndexRequest;
-import co.elastic.clients.elasticsearch.core.IndexResponse;
-import co.elastic.clients.elasticsearch.core.UpdateRequest;
-import co.elastic.clients.elasticsearch.core.UpdateResponse;
+import co.elastic.clients.elasticsearch.core.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.CommonPage;
+import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.constant.NoteMqConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.manager.NoteManager;
 import com.example.red.book.mapper.NoteMapper;
 import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteQueryForm;
+import com.example.red.book.model.form.NoteSearchForm;
 import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.service.NoteService;
@@ -57,10 +56,10 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         note.setTitle(noteAddForm.getTitle());
         note.setContent(noteAddForm.getContent());
         note.setIsPublic(noteAddForm.getIsPublic());
-        note.setImages(noteAddForm.getImages());
+        note.setImages(String.join(",", noteAddForm.getImages()));
         Boolean isSuccess = this.baseMapper.insert(note) > 0;
         if (isSuccess) {
-            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.INSERT_KEY, note);
+            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.INSERT_KEY, note.getId());
         }
         return isSuccess;
     }
@@ -141,5 +140,10 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     @Override
     public Note selectById(Long id) {
         return this.baseMapper.selectById(id);
+    }
+
+    @Override
+    public ElasticSearchResult<NoteVO> search(NoteSearchForm noteSearchForm) {
+       return noteManager.getNoteByEs(noteSearchForm);
     }
 }

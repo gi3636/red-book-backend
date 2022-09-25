@@ -22,9 +22,8 @@ public class NoteListener {
     NoteService noteService;
 
     @RabbitListener(queues = NoteMqConstant.INSERT_QUEUE_NAME)
-    public void listenNoteInsert(Note note) {
-        log.info("监听到消息，数据：{}", note);
-        note = noteService.selectByUserIdAndTitle(note.getUserId(), note.getTitle());
+    public void listenNoteInsert(long id) {
+        Note note = noteService.selectById(id);
         if (note != null) {
             NoteVO noteVO = NoteVO.convert(note);
             noteService.addDoc(noteVO);
@@ -32,7 +31,7 @@ public class NoteListener {
     }
 
     @RabbitListener(queues = NoteMqConstant.DELETE_QUEUE_NAME)
-    public void listenHotelDelete(Long id) {
+    public void listenNoteDelete(Long id) {
         //noteService.deleteById(id);
     }
 

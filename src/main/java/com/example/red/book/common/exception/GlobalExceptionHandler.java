@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(GlobalException.class)
     public CommonResult error(GlobalException e) {
-        log.error("异常信息：{}", e);
+        log.error("异常信息：{} {}", e.getCode(), e.getMessage(), e);
         return CommonResult.failed(e.getCode(), (e.getMessage()));
     }
 }

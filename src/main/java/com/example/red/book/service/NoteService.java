@@ -2,9 +2,11 @@ package com.example.red.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.red.book.common.api.CommonPage;
+import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteQueryForm;
+import com.example.red.book.model.form.NoteSearchForm;
 import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 
@@ -32,4 +34,6 @@ public interface NoteService extends IService<Note> {
     Boolean update(NoteUpdateForm noteUpdateForm, Long userId);
 
     Note selectById(Long id);
+
+    ElasticSearchResult<NoteVO> search(NoteSearchForm noteSearchForm);
 }

@@ -2,21 +2,26 @@ package com.example.red.book.controller;
 
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.Refresh;
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.mapping.KeywordProperty;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch._types.mapping.TextProperty;
 import co.elastic.clients.elasticsearch._types.mapping.TypeMapping;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
 import com.example.red.book.common.api.CommonResult;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
-import com.example.red.book.config.ElasticSearchClientConfig;
 import com.example.red.book.entity.Note;
+import com.example.red.book.model.vo.NoteVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Api(tags = "elasticsearch模块")
 @RestController
@@ -170,6 +176,45 @@ public class ElasticsearchController {
         return esClient.bulk(builder.build()).errors();
     }
 
+
+    @GetMapping("queryDoc")
+    public CommonResult<List<NoteVO>> queryDoc() throws IOException {
+        // 不公开不显示
+        BoolQuery boolQuery = new BoolQuery.Builder()
+                .mustNot(new TermQuery.Builder().field("isPublic").value("false").build()._toQuery())
+                .build();
+
+        MatchQuery matchQuery = new MatchQuery.Builder()
+                .query("test")
+                .field("title")
+                .field("content")
+                .build();
+
+        SortOptions sortOptions = new SortOptions.Builder()
+                .field(f->f.field("createdTime").order(SortOrder.Asc))
+                .build();
+
+        SearchRequest request = new SearchRequest.Builder()
+                .from(0)
+                .size(20)
+                .sort(sortOptions)
+                .index(indexName)
+                .query(boolQuery._toQuery())
+                .query(matchQuery._toQuery())
+                .build();
+
+        SearchResponse<NoteVO> search =
+                esClient.search(
+                        request,
+                        NoteVO.class
+                );
+
+        long total = search.hits().total().value();
+        log.info("查询文档操作 ===={} ",  search.hits());
+        log.info("total:{}", total);
+        List<NoteVO> noteList = search.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
+        return CommonResult.success(noteList);
+    }
 }
 
 

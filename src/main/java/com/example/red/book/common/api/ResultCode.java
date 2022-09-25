@@ -20,7 +20,8 @@ public enum ResultCode implements IErrorCode {
     UPLOAD_ERROR(20101, "上传文件失败"),
     FILE_EMPTY(20102, "文件为空"),
     CREATED_INDEX_FAILED(20201, "创建索引失败"),
-    INDEX_EXISTS(20202, "索引已存在");
+    INDEX_EXISTS(20202, "索引已存在"),
+    QueryError(20203,"查询数据错误" );
 
 
     private long code;
