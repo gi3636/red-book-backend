@@ -18,7 +18,7 @@ import com.example.red.book.common.api.CommonResult;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.entity.Note;
-import com.example.red.book.model.vo.NoteVO;
+import com.example.red.book.model.doc.NoteDoc;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import co.elastic.clients.elasticsearch._types.SortOrder;
@@ -43,38 +43,6 @@ public class ElasticsearchController {
     @Autowired
     private ElasticsearchClient esClient;
     private static final String indexName = "note";
-
-
-    @GetMapping("/init")
-    public CommonResult<Boolean> createEsIndex() throws IOException {
-        BooleanResponse exists = esClient.indices().exists((b) -> b.index(indexName));
-        log.info("index exists:{}", exists.value());
-        if (exists.value()) {
-            throw GlobalException.from(ResultCode.INDEX_EXISTS);
-        }
-        //定义文档属性
-        Map<String, Property> propertyMap = new HashMap<>();
-        propertyMap.put("id", new Property(new KeywordProperty.Builder().build()));
-        propertyMap.put("title", new Property(new TextProperty.Builder().analyzer("ik_max_word").searchAnalyzer("ik_smart").build()));
-        propertyMap.put("content", new Property(new TextProperty.Builder().analyzer("ik_max_word").searchAnalyzer("ik_smart").build()));
-        // 设置索引的文档类型映射
-        TypeMapping typeMapping = new TypeMapping.Builder()
-                .properties(propertyMap)
-                .build();
-        try {
-            // 创建索引
-            CreateIndexResponse createIndexResponse = esClient.indices().create(b -> b
-                    .index(indexName)
-                    .mappings(typeMapping)
-            );
-            // 响应状态
-            log.info("增加索引操作 : {} ", createIndexResponse.acknowledged());
-        } catch (IOException e) {
-            log.error("增加索引操作 : {}", e.getMessage());
-            throw GlobalException.from(ResultCode.CREATED_INDEX_FAILED);
-        }
-        return CommonResult.success(true);
-    }
 
 
     @GetMapping("getDoc")
@@ -178,7 +146,7 @@ public class ElasticsearchController {
 
 
     @GetMapping("queryDoc")
-    public CommonResult<List<NoteVO>> queryDoc() throws IOException {
+    public CommonResult<List<NoteDoc>> queryDoc() throws IOException {
         // 不公开不显示
         BoolQuery boolQuery = new BoolQuery.Builder()
                 .mustNot(new TermQuery.Builder().field("isPublic").value("false").build()._toQuery())
@@ -191,7 +159,7 @@ public class ElasticsearchController {
                 .build();
 
         SortOptions sortOptions = new SortOptions.Builder()
-                .field(f->f.field("createdTime").order(SortOrder.Asc))
+                .field(f -> f.field("createdTime").order(SortOrder.Asc))
                 .build();
 
         SearchRequest request = new SearchRequest.Builder()
@@ -203,16 +171,16 @@ public class ElasticsearchController {
                 .query(matchQuery._toQuery())
                 .build();
 
-        SearchResponse<NoteVO> search =
+        SearchResponse<NoteDoc> search =
                 esClient.search(
                         request,
-                        NoteVO.class
+                        NoteDoc.class
                 );
 
         long total = search.hits().total().value();
-        log.info("查询文档操作 ===={} ",  search.hits());
+        log.info("查询文档操作 ===={} ", search.hits());
         log.info("total:{}", total);
-        List<NoteVO> noteList = search.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
+        List<NoteDoc> noteList = search.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
         return CommonResult.success(noteList);
     }
 }

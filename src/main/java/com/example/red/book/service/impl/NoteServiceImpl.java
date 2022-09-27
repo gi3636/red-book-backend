@@ -8,10 +8,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
+import com.example.red.book.constant.NoteEsConstant;
 import com.example.red.book.constant.NoteMqConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.manager.NoteManager;
 import com.example.red.book.mapper.NoteMapper;
+import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteQueryForm;
 import com.example.red.book.model.form.NoteSearchForm;
@@ -46,7 +48,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     @Autowired
     NoteManager noteManager;
 
-    private static final String indexName = "note";
+    private static final String indexName = NoteEsConstant.INDEX;
 
 
     @Override
@@ -59,7 +61,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         note.setImages(String.join(",", noteAddForm.getImages()));
         Boolean isSuccess = this.baseMapper.insert(note) > 0;
         if (isSuccess) {
-            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.INSERT_KEY, note.getId());
+            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.INSERT_KEY, note);
         }
         return isSuccess;
     }
@@ -76,13 +78,13 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         return CommonPage.restPage(newData);
     }
 
-    public Boolean addDoc(NoteVO noteVO) {
-        IndexRequest<NoteVO> request = new IndexRequest.Builder<NoteVO>()
+    public Boolean addEsDoc(NoteDoc noteDoc) {
+        IndexRequest<NoteDoc> request = new IndexRequest.Builder<NoteDoc>()
                 .index(indexName)
                 // 设置文档id
-                .id(noteVO.getId() + "")
+                .id(noteDoc.getId() + "")
                 // 设置文档
-                .document(noteVO)
+                .document(noteDoc)
                 // 刷新
                 .refresh(Refresh.True)
                 .build();
@@ -96,15 +98,15 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         }
     }
 
-    @Override
-    public Boolean updateDoc(NoteVO noteVO) {
-        UpdateRequest<Note, NoteVO> request = new UpdateRequest.Builder<Note, NoteVO>()
-                .id(noteVO.getId() + "")
+
+    public Boolean updateEsDoc(NoteDoc noteDoc) {
+        UpdateRequest<NoteDoc, NoteDoc> request = new UpdateRequest.Builder<NoteDoc, NoteDoc>()
+                .id(noteDoc.getId() + "")
                 .index(indexName)
-                .doc(noteVO)
+                .doc(noteDoc)
                 .build();
         try {
-            UpdateResponse<Note> fileDocumentGetResponse = esClient.update(request, Note.class);
+            UpdateResponse<NoteDoc> fileDocumentGetResponse = esClient.update(request, NoteDoc.class);
             log.info("更新笔记es文档 : {}", fileDocumentGetResponse.result());
             return true;
         } catch (IOException e) {
@@ -132,7 +134,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
                 .eq(Note::getUserId, userId);
         Boolean isSuccess = this.baseMapper.update(note, wrapper) > 0;
         if (isSuccess) {
-            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.UPDATE_KEY, note.getId());
+            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.UPDATE_KEY, note);
         }
         return isSuccess;
     }
@@ -143,7 +145,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
-    public ElasticSearchResult<NoteVO> search(NoteSearchForm noteSearchForm) {
-       return noteManager.getNoteByEs(noteSearchForm);
+    public ElasticSearchResult<NoteDoc> search(NoteSearchForm noteSearchForm) {
+        return noteManager.getNoteByEs(noteSearchForm);
     }
 }

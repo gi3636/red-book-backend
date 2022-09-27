@@ -3,7 +3,8 @@ package com.example.red.book.mq;
 
 import com.example.red.book.constant.NoteMqConstant;
 import com.example.red.book.entity.Note;
-import com.example.red.book.model.vo.NoteVO;
+import com.example.red.book.model.doc.NoteDoc;
+import com.example.red.book.service.NoteDocService;
 import com.example.red.book.service.NoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
@@ -21,12 +22,15 @@ public class NoteListener {
     @Autowired
     NoteService noteService;
 
+    @Autowired
+    NoteDocService noteDocService;
+
     @RabbitListener(queues = NoteMqConstant.INSERT_QUEUE_NAME)
-    public void listenNoteInsert(long id) {
-        Note note = noteService.selectById(id);
+    public void listenNoteInsert(Note note) {
         if (note != null) {
-            NoteVO noteVO = NoteVO.convert(note);
-            noteService.addDoc(noteVO);
+            log.info("监听到新增笔记消息，笔记为：{}", note);
+            NoteDoc noteDoc = new NoteDoc(note);
+            noteService.addEsDoc(noteDoc);
         }
     }
 
@@ -40,11 +44,10 @@ public class NoteListener {
             exchange = @Exchange(name = NoteMqConstant.EXCHANGE_NAME, type = ExchangeTypes.TOPIC),
             key = NoteMqConstant.UPDATE_KEY
     ))
-    public void listenNoteUpdate(long id) {
-        Note note = noteService.selectById(id);
+    public void listenNoteUpdate(Note note) {
         if (note != null) {
-            NoteVO noteVO = NoteVO.convert(note);
-            noteService.updateDoc(noteVO);
+            NoteDoc noteDoc = new NoteDoc(note);
+            noteService.updateEsDoc(noteDoc);
         }
     }
 }

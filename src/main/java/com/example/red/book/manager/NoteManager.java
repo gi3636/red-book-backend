@@ -14,11 +14,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
+import com.example.red.book.constant.NoteEsConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.mapper.NoteMapper;
+import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.NoteQueryForm;
 import com.example.red.book.model.form.NoteSearchForm;
-import com.example.red.book.model.vo.NoteVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NoteManager extends ServiceImpl<NoteMapper, Note> {
 
-    private static final String indexName = "note";
+    private static final String indexName = NoteEsConstant.INDEX;
 
     @Autowired
     private ElasticsearchClient esClient;
@@ -51,7 +52,7 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
     }
 
 
-    public ElasticSearchResult<NoteVO> getNoteByEs(NoteSearchForm noteSearchForm) {
+    public ElasticSearchResult<NoteDoc> getNoteByEs(NoteSearchForm noteSearchForm) {
         BoolQuery boolQuery = new BoolQuery.Builder()
                 .mustNot(new TermQuery.Builder().field("isPublic").value("false").build()._toQuery())
                 .build();
@@ -77,9 +78,9 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
                 .query(matchQuery._toQuery())
                 .build();
 
-        ElasticSearchResult<NoteVO> result;
+        ElasticSearchResult<NoteDoc> result;
         try {
-            SearchResponse<NoteVO> search = esClient.search(request, NoteVO.class);
+            SearchResponse<NoteDoc> search = esClient.search(request, NoteDoc.class);
             result = new ElasticSearchResult<>(search, noteSearchForm.getCurrentPage(), noteSearchForm.getSize());
         } catch (Exception e) {
             log.error("查询数据：{}", noteSearchForm.getKeyword());

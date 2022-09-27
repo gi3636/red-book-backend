@@ -4,11 +4,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class NoteUpdateForm {
 
-    @NotBlank(message = "笔记id不能为空")
+    @NotNull(message = "笔记id不能为空")
     @ApiModelProperty("笔记Id")
     private Long id;
 
