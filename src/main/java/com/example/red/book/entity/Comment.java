@@ -39,7 +39,7 @@ public class Comment implements Serializable {
     @ApiModelProperty("用户id")
     private Long userId;
 
-    @ApiModelProperty("父id")
+    @ApiModelProperty("回复的评论id")
     private Long parentId;
 
     @ApiModelProperty("评论内容")
