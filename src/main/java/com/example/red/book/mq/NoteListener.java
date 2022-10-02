@@ -1,7 +1,7 @@
 package com.example.red.book.mq;
 
 
-import com.example.red.book.constant.NoteMqConstant;
+import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.service.NoteDocService;
@@ -25,7 +25,7 @@ public class NoteListener {
     @Autowired
     NoteDocService noteDocService;
 
-    @RabbitListener(queues = NoteMqConstant.INSERT_QUEUE_NAME)
+    @RabbitListener(queues = NoteConstant.INSERT_QUEUE_NAME)
     public void listenNoteInsert(Note note) {
         if (note != null) {
             log.info("监听到新增笔记消息，笔记为：{}", note);
@@ -34,15 +34,15 @@ public class NoteListener {
         }
     }
 
-    @RabbitListener(queues = NoteMqConstant.DELETE_QUEUE_NAME)
+    @RabbitListener(queues = NoteConstant.DELETE_QUEUE_NAME)
     public void listenNoteDelete(Long id) {
         //noteService.deleteById(id);
     }
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(name = NoteMqConstant.UPDATE_QUEUE_NAME),
-            exchange = @Exchange(name = NoteMqConstant.EXCHANGE_NAME, type = ExchangeTypes.TOPIC),
-            key = NoteMqConstant.UPDATE_KEY
+            value = @Queue(name = NoteConstant.UPDATE_QUEUE_NAME),
+            exchange = @Exchange(name = NoteConstant.EXCHANGE_NAME, type = ExchangeTypes.TOPIC),
+            key = NoteConstant.UPDATE_KEY
     ))
     public void listenNoteUpdate(Note note) {
         if (note != null) {

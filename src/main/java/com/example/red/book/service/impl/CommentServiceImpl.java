@@ -1,16 +1,22 @@
 package com.example.red.book.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.entity.Comment;
 import com.example.red.book.entity.Note;
 import com.example.red.book.mapper.CommentMapper;
 import com.example.red.book.model.form.CommentAddForm;
+import com.example.red.book.model.form.CommentQueryForm;
+import com.example.red.book.model.vo.CommentVO;
 import com.example.red.book.service.CommentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.service.NoteService;
 import com.example.red.book.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -20,6 +26,7 @@ import org.springframework.stereotype.Service;
  * @author franky
  * @since 2022-09-19
  */
+@Slf4j
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
@@ -54,5 +61,33 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         comment.setToUserId(commentAddForm.getToUserId());
         comment.setUserId(userId);
         return this.save(comment);
+    }
+
+    @Override
+    public List<CommentVO> query(CommentQueryForm commentQueryForm, Long userId) {
+        Note note = noteService.selectById(commentQueryForm.getNoteId());
+        if (note == null) {
+            throw GlobalException.from("笔记不存在");
+        }
+        //笔记不公开，只有作者可以查看
+        if (!note.getIsPublic() && !note.getUserId().equals(userId)) {
+            throw GlobalException.from("笔记不公开");
+        }
+        //查询一级评论
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getNoteId, commentQueryForm.getNoteId())
+                .isNull(Comment::getParentId);
+        List<Comment> comments =  this.list(queryWrapper);
+        List<CommentVO> commentVOList = CommentVO.convert(comments);
+        for (CommentVO comment :commentVOList){
+            //查询二级评论
+            LambdaQueryWrapper<Comment> queryWrapper2 = new LambdaQueryWrapper<>();
+            queryWrapper2.eq(Comment::getNoteId, commentQueryForm.getNoteId())
+                    .eq(Comment::getParentId, comment.getId());
+            List<Comment> comments2 =  this.list(queryWrapper2);
+            List<CommentVO> commentVOList2 = CommentVO.convert(comments2);
+            comment.setChildren(commentVOList2);
+        }
+        return commentVOList;
     }
 }

@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
-import com.example.red.book.constant.NoteEsConstant;
+import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.mapper.NoteMapper;
 import com.example.red.book.model.doc.NoteDoc;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NoteManager extends ServiceImpl<NoteMapper, Note> {
 
-    private static final String indexName = NoteEsConstant.INDEX;
+    private static final String indexName = NoteConstant.INDEX;
 
     @Autowired
     private ElasticsearchClient esClient;

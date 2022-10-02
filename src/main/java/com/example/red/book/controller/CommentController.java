@@ -3,6 +3,8 @@ package com.example.red.book.controller;
 
 import com.example.red.book.common.api.CommonResult;
 import com.example.red.book.model.form.CommentAddForm;
+import com.example.red.book.model.form.CommentQueryForm;
+import com.example.red.book.model.vo.CommentVO;
 import com.example.red.book.service.CommentService;
 import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -43,6 +47,14 @@ public class CommentController {
         }
         return CommonResult.success(null);
     }
+
+    @ApiOperation(value = "查询笔记评论")
+    @PostMapping("list")
+    public CommonResult<List<CommentVO>> list(@Validated @RequestBody CommentQueryForm commentQueryForm) {
+        List<CommentVO> commentVOList = commentService.query(commentQueryForm, sessionUtil.getUserId());
+        return CommonResult.success(commentVOList);
+    }
+
 
 }
 

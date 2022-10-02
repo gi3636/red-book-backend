@@ -1,7 +1,7 @@
 package com.example.red.book.model.doc;
 
 
-import com.example.red.book.constant.NoteEsConstant;
+import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.Date;
 
-@Document(indexName = NoteEsConstant.INDEX)
+@Document(indexName = NoteConstant.INDEX)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

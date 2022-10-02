@@ -1,7 +1,7 @@
 package com.example.red.book.config;
 
 
-import com.example.red.book.constant.NoteMqConstant;
+import com.example.red.book.constant.NoteConstant;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -29,26 +29,26 @@ public class MqConfig {
 
     @Bean
     public TopicExchange topicExchange() {
-        return new TopicExchange(NoteMqConstant.EXCHANGE_NAME, true, false);
+        return new TopicExchange(NoteConstant.EXCHANGE_NAME, true, false);
     }
 
     @Bean
     public Queue insertQueue() {
-        return new Queue(NoteMqConstant.INSERT_QUEUE_NAME, true);
+        return new Queue(NoteConstant.INSERT_QUEUE_NAME, true);
     }
 
     @Bean
     public Queue deleteQueue() {
-        return new Queue(NoteMqConstant.DELETE_QUEUE_NAME, true);
+        return new Queue(NoteConstant.DELETE_QUEUE_NAME, true);
     }
 
     @Bean
     public Binding insertQueueBinding() {
-        return BindingBuilder.bind(insertQueue()).to(topicExchange()).with(NoteMqConstant.INSERT_KEY);
+        return BindingBuilder.bind(insertQueue()).to(topicExchange()).with(NoteConstant.INSERT_KEY);
     }
 
     @Bean
     public Binding deleteQueueBinding() {
-        return BindingBuilder.bind(deleteQueue()).to(topicExchange()).with(NoteMqConstant.DELETE_KEY);
+        return BindingBuilder.bind(deleteQueue()).to(topicExchange()).with(NoteConstant.DELETE_KEY);
     }
 }

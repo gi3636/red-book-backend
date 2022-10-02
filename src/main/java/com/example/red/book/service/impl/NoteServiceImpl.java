@@ -8,8 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
-import com.example.red.book.constant.NoteEsConstant;
-import com.example.red.book.constant.NoteMqConstant;
+import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.manager.NoteManager;
 import com.example.red.book.mapper.NoteMapper;
@@ -48,7 +47,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     @Autowired
     NoteManager noteManager;
 
-    private static final String indexName = NoteEsConstant.INDEX;
+    private static final String indexName = NoteConstant.INDEX;
 
 
     @Override
@@ -61,7 +60,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         note.setImages(String.join(",", noteAddForm.getImages()));
         Boolean isSuccess = this.baseMapper.insert(note) > 0;
         if (isSuccess) {
-            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.INSERT_KEY, note);
+            rabbitTemplate.convertAndSend(NoteConstant.EXCHANGE_NAME, NoteConstant.INSERT_KEY, note);
         }
         return isSuccess;
     }
@@ -134,7 +133,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
                 .eq(Note::getUserId, userId);
         Boolean isSuccess = this.baseMapper.update(note, wrapper) > 0;
         if (isSuccess) {
-            rabbitTemplate.convertAndSend(NoteMqConstant.EXCHANGE_NAME, NoteMqConstant.UPDATE_KEY, note);
+            rabbitTemplate.convertAndSend(NoteConstant.EXCHANGE_NAME, NoteConstant.UPDATE_KEY, note);
         }
         return isSuccess;
     }
