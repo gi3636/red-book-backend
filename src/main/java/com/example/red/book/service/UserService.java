@@ -23,4 +23,6 @@ public interface UserService extends IService<User> {
     Boolean register(RegisterForm registerForm);
 
     Boolean updateUserById(UserUpdateForm userUpdateForm);
+
+    User selectById(Long id);
 }

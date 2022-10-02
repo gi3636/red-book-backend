@@ -2,6 +2,7 @@ package com.example.red.book.service;
 
 import com.example.red.book.entity.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.red.book.model.form.CommentAddForm;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CommentService extends IService<Comment> {
 
+    Boolean add(CommentAddForm commentAddForm, Long userId);
 }

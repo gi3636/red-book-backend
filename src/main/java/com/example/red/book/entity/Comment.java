@@ -42,6 +42,9 @@ public class Comment implements Serializable {
     @ApiModelProperty("回复的评论id")
     private Long parentId;
 
+    @ApiModelProperty("回复的对象id")
+    private Long toUserId;
+
     @ApiModelProperty("评论内容")
     private String content;
 

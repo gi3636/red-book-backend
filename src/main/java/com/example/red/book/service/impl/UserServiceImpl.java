@@ -109,4 +109,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return this.updateById(user);
     }
 
+    @Override
+    public User selectById(Long id) {
+        return baseMapper.selectById(id);
+    }
+
 }
