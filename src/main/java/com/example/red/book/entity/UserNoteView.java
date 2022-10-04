@@ -1,9 +1,10 @@
 package com.example.red.book.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
+import java.util.Date;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -34,5 +35,12 @@ public class UserNoteView implements Serializable {
     @ApiModelProperty("笔记id")
     private Long noteId;
 
+    @ApiModelProperty("创建时间")
+    @TableField(fill = FieldFill.INSERT)
+    private Date createdTime;
+
+    @ApiModelProperty("更新时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updatedTime;
 
 }

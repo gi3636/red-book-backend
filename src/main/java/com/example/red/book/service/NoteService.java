@@ -37,4 +37,8 @@ public interface NoteService extends IService<Note> {
     Note selectById(Long id);
 
     ElasticSearchResult<NoteDoc> search(NoteSearchForm noteSearchForm);
+
+    Boolean like(Long noteId, Long userId);
+
+    Boolean unlike(Long noteId, Long userId);
 }

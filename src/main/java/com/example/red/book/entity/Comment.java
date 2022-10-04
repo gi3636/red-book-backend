@@ -51,11 +51,11 @@ public class Comment implements Serializable {
     @ApiModelProperty("评论点赞数")
     private Integer likeCount;
 
-    @ApiModelProperty("创建时间;创建时间")
+    @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createdTime;
 
-    @ApiModelProperty("更新时间;更新时间")
+    @ApiModelProperty("更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updatedTime;
 

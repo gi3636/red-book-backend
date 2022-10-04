@@ -17,10 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -74,6 +71,26 @@ public class NoteController {
     public CommonResult<ElasticSearchResult<NoteDoc>> search(@Validated @RequestBody NoteSearchForm noteSearchForm) {
         ElasticSearchResult<NoteDoc> result = noteService.search(noteSearchForm);
         return CommonResult.success(result);
+    }
+
+    @ApiOperation(value = "笔记点赞")
+    @PostMapping("like/{noteId}")
+    public CommonResult<Void> like(@PathVariable("noteId") Long noteId) {
+        Boolean isSuccess = noteService.like(noteId, sessionUtil.getUserId());
+        if (!isSuccess) {
+            return CommonResult.failed("点赞失败");
+        }
+        return CommonResult.success(null);
+    }
+
+    @ApiOperation(value = "笔记取消点赞")
+    @PostMapping("unlike/{noteId}")
+    public CommonResult<Void> unlike(@PathVariable("noteId") Long noteId) {
+        Boolean isSuccess = noteService.unlike(noteId, sessionUtil.getUserId());
+        if (!isSuccess) {
+            return CommonResult.failed("取消点赞失败");
+        }
+        return CommonResult.success(null);
     }
 
 }

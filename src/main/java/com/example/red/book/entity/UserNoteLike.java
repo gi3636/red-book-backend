@@ -1,11 +1,13 @@
 package com.example.red.book.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
+import java.util.Date;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +36,21 @@ public class UserNoteLike implements Serializable {
     @ApiModelProperty("笔记id")
     private Long noteId;
 
+    @ApiModelProperty("点赞状态 0是取消 1是点赞")
+    private Integer status;
+
+    @ApiModelProperty("创建时间")
+    @TableField(fill = FieldFill.INSERT)
+    private Date createdTime;
+
+    @ApiModelProperty("更新时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updatedTime;
 
 
+    public UserNoteLike(Long userId, Long noteId, Integer value) {
+        this.userId = userId;
+        this.noteId = noteId;
+        this.status = value;
+    }
 }

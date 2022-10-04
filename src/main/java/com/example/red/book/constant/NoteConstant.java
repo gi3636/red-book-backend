@@ -9,4 +9,6 @@ public class NoteConstant {
     public static final String INSERT_KEY = "note.insert";
     public static final String DELETE_KEY = "note.delete";
     public static final String UPDATE_KEY = "note.update";
+    public static final String USER_NOTE_LIKE_KEY = "user::note.like";
+    public static final String USER_NOTE_LIKE_COUNT_KEY = "user::note.like.count";
 }

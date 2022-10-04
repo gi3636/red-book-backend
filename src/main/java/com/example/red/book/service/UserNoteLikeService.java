@@ -2,6 +2,9 @@ package com.example.red.book.service;
 
 import com.example.red.book.entity.UserNoteLike;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.red.book.model.vo.LikeCountVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserNoteLikeService extends IService<UserNoteLike> {
 
+
+    List<UserNoteLike> getLikeDataFromRedis();
+
+    List<LikeCountVO> getLikedCountFromRedis();
 }

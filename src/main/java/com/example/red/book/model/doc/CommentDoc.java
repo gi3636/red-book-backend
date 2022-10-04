@@ -41,7 +41,8 @@ public class CommentDoc {
     @ApiModelProperty("回复的对象id")
     private Long toUserId;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
+    //@Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
+    @Field(type = FieldType.Text)
     @ApiModelProperty("评论内容")
     private String content;
 
