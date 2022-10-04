@@ -2,6 +2,9 @@ package com.example.red.book.controller;
 
 
 import com.example.red.book.common.api.CommonResult;
+import com.example.red.book.common.api.ElasticSearchResult;
+import com.example.red.book.manager.CommentManager;
+import com.example.red.book.model.doc.CommentDoc;
 import com.example.red.book.model.form.CommentAddForm;
 import com.example.red.book.model.form.CommentQueryForm;
 import com.example.red.book.model.vo.CommentVO;
@@ -38,6 +41,9 @@ public class CommentController {
     @Autowired
     private SessionUtil sessionUtil;
 
+    @Autowired
+    private CommentManager commentManager;
+
     @ApiOperation(value = "添加评论")
     @PostMapping("add")
     public CommonResult<Void> add(@Validated @RequestBody CommentAddForm commentAddForm) {
@@ -53,6 +59,12 @@ public class CommentController {
     public CommonResult<List<CommentVO>> list(@Validated @RequestBody CommentQueryForm commentQueryForm) {
         List<CommentVO> commentVOList = commentService.query(commentQueryForm, sessionUtil.getUserId());
         return CommonResult.success(commentVOList);
+    }
+
+    @ApiOperation(value = "查询评论")
+    @PostMapping("test")
+    public ElasticSearchResult<CommentDoc> test() {
+        return commentManager.getCommentByEsAndNoteId(1574589760884756482L, 1, 10);
     }
 
 

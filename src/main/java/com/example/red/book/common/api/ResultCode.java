@@ -21,7 +21,10 @@ public enum ResultCode implements IErrorCode {
     FILE_EMPTY(20102, "文件为空"),
     CREATED_INDEX_FAILED(20201, "创建索引失败"),
     INDEX_EXISTS(20202, "索引已存在"),
-    QueryError(20203,"查询数据错误" );
+    QueryError(20203, "查询数据错误"),
+    NOTE_NOT_EXIST(20204, "笔记不存在"),
+    COMMENT_NOT_EXIST(20205, "评论不存在"),
+    COMMENT_NOTE_NOT_MATCH(20206, "评论笔记不匹配");
 
 
     private long code;

@@ -22,9 +22,6 @@ public class NoteListener {
     @Autowired
     NoteService noteService;
 
-    @Autowired
-    NoteDocService noteDocService;
-
     @RabbitListener(queues = NoteConstant.INSERT_QUEUE_NAME)
     public void listenNoteInsert(Note note) {
         if (note != null) {
