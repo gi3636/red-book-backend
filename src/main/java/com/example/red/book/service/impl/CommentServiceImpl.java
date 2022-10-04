@@ -7,21 +7,21 @@ import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.UpdateResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.constant.CommentConstant;
 import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Comment;
 import com.example.red.book.entity.Note;
-import com.example.red.book.manager.NoteManager;
+import com.example.red.book.manager.CommentManager;
 import com.example.red.book.mapper.CommentMapper;
 import com.example.red.book.model.doc.CommentDoc;
-import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.CommentAddForm;
 import com.example.red.book.model.form.CommentQueryForm;
 import com.example.red.book.model.vo.CommentVO;
 import com.example.red.book.service.CommentService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.service.NoteService;
 import com.example.red.book.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -50,6 +51,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     UserService userService;
 
+    @Autowired
+    CommentManager commentManager;
     @Autowired
     private ElasticsearchClient esClient;
 
@@ -76,7 +79,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             if (parentComment == null) {
                 throw GlobalException.from(ResultCode.COMMENT_NOT_EXIST);
             }
-            if (parentComment.getNoteId() != commentAddForm.getNoteId()) {
+            if (!Objects.equals(parentComment.getNoteId(), commentAddForm.getNoteId())) {
                 throw GlobalException.from(ResultCode.COMMENT_NOTE_NOT_MATCH);
             }
         }
@@ -124,17 +127,56 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public void addEsDoc(CommentDoc commentDoc) {
-        IndexRequest<CommentDoc> request = new IndexRequest.Builder<CommentDoc>()
-                .index(indexName)
+        if (commentDoc.getParentId() != null) {
+            CommentDoc parentComment = commentManager.getCommentDocByEs(commentDoc.getParentId());
+            if (parentComment != null) {
+                parentComment.getChildren().add(commentDoc);
+                this.updateEsDoc(parentComment);
+            }
+        } else {
+            IndexRequest<CommentDoc> request = new IndexRequest.Builder<CommentDoc>()
+                    .index(indexName)
+                    .id(commentDoc.getId() + "")
+                    .document(commentDoc)
+                    .refresh(Refresh.True)
+                    .build();
+            try {
+                IndexResponse response = esClient.index(request);
+                log.info("增加评论es文档: {} ", response.result());
+            } catch (IOException e) {
+                log.error("增加评论es文档错误: {} ", e.getMessage(), e);
+            }
+        }
+
+    }
+
+    @Override
+    public ElasticSearchResult<CommentDoc> queryByEs(CommentQueryForm commentQueryForm, Long userId) {
+        Note note = noteService.selectById(commentQueryForm.getNoteId());
+        if (note == null) {
+            throw GlobalException.from("笔记不存在");
+        }
+        //笔记不公开，只有作者可以查看
+        if (!note.getIsPublic() && !note.getUserId().equals(userId)) {
+            throw GlobalException.from("笔记不公开");
+        }
+        return commentManager.getCommentListByEs(commentQueryForm.getNoteId(), commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
+    }
+
+
+    public Boolean updateEsDoc(CommentDoc commentDoc) {
+        UpdateRequest<CommentDoc, CommentDoc> request = new UpdateRequest.Builder<CommentDoc, CommentDoc>()
                 .id(commentDoc.getId() + "")
-                .document(commentDoc)
-                .refresh(Refresh.True)
+                .index(indexName)
+                .doc(commentDoc)
                 .build();
         try {
-            IndexResponse response = esClient.index(request);
-            log.info("增加评论es文档: {} ", response.result());
+            UpdateResponse<CommentDoc> fileDocumentGetResponse = esClient.update(request, CommentDoc.class);
+            log.info("更新笔记es文档 : {}", fileDocumentGetResponse.result());
+            return true;
         } catch (IOException e) {
-            log.error("增加评论es文档错误: {} ", e.getMessage(), e);
+            log.error("更新笔记es文档错误 : {}", e.getMessage(), e);
+            return false;
         }
     }
 }

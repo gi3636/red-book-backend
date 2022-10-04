@@ -5,6 +5,7 @@ import com.example.red.book.common.api.CommonResult;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.manager.CommentManager;
 import com.example.red.book.model.doc.CommentDoc;
+import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.CommentAddForm;
 import com.example.red.book.model.form.CommentQueryForm;
 import com.example.red.book.model.vo.CommentVO;
@@ -62,9 +63,10 @@ public class CommentController {
     }
 
     @ApiOperation(value = "查询评论")
-    @PostMapping("test")
-    public ElasticSearchResult<CommentDoc> test() {
-        return commentManager.getCommentByEsAndNoteId(1574589760884756482L, 1, 10);
+    @PostMapping("es/list/")
+    public CommonResult<ElasticSearchResult<CommentDoc>> query(@Validated @RequestBody CommentQueryForm commentQueryForm) {
+        ElasticSearchResult<CommentDoc> result = commentService.queryByEs(commentQueryForm, sessionUtil.getUserId());
+        return CommonResult.success(result);
     }
 
 

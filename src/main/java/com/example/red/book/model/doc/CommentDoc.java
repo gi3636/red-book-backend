@@ -12,6 +12,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class CommentDoc {
     private Date createdTime;
 
     @ApiModelProperty("子评论")
-    List<CommentDoc> children;
+    List<CommentDoc> children = new ArrayList<>();
 
     public CommentDoc(Comment comment) {
         this.id = comment.getId();
