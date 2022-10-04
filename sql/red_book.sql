@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 21/09/2022 22:23:43
+ Date: 04/10/2022 23:30:48
 */
 
 SET NAMES utf8mb4;
@@ -25,11 +25,12 @@ CREATE TABLE `tbl_comment`  (
   `id` bigint NOT NULL COMMENT '评论id',
   `note_id` bigint NOT NULL COMMENT '笔记id',
   `user_id` bigint NULL DEFAULT NULL COMMENT '用户id',
-  `parent_id` bigint NULL DEFAULT NULL COMMENT '父id',
+  `parent_id` bigint NULL DEFAULT NULL COMMENT '回复的评论id',
+  `to_user_id` bigint NULL DEFAULT NULL COMMENT '回复的对象id',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
   `like_count` int NULL DEFAULT NULL COMMENT '评论点赞数',
-  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间;创建时间',
-  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间;更新时间',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '评论表' ROW_FORMAT = Dynamic;
@@ -48,8 +49,8 @@ CREATE TABLE `tbl_note`  (
   `view_count` int NULL DEFAULT NULL COMMENT '浏览数',
   `images` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '笔记图片,多个图片用逗号分隔',
   `is_public` tinyint(1) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '是否公开 1是公开，0是个人可见',
-  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间;创建时间',
-  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间;更新时间',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记表' ROW_FORMAT = Dynamic;
@@ -71,8 +72,8 @@ CREATE TABLE `tbl_user`  (
   `city` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '城市',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '简介',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '个人介绍的背景图',
-  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间;创建时间',
-  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间;更新时间',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `deleted` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除;1是删除，0是不删除',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 125878278 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
@@ -86,6 +87,8 @@ CREATE TABLE `tbl_user_comment_like`  (
   `user_id` bigint NOT NULL COMMENT '用户id',
   `comment_id` bigint NOT NULL COMMENT '评论id',
   `note_id` bigint NOT NULL COMMENT '笔记id',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '评论点赞数表' ROW_FORMAT = Dynamic;
 
@@ -97,6 +100,8 @@ CREATE TABLE `tbl_user_note_follow`  (
   `id` bigint NOT NULL,
   `user_id` bigint NOT NULL COMMENT '用户id',
   `note_id` bigint NOT NULL COMMENT '笔记Id',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记收藏数表' ROW_FORMAT = Dynamic;
 
@@ -108,6 +113,9 @@ CREATE TABLE `tbl_user_note_like`  (
   `id` bigint NOT NULL,
   `user_id` bigint NOT NULL COMMENT '用户id',
   `note_id` bigint NOT NULL COMMENT '笔记id',
+  `status` int(10) UNSIGNED ZEROFILL NOT NULL COMMENT '点赞状态 0是取消 1是点赞',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记点赞数表' ROW_FORMAT = Dynamic;
 
@@ -119,6 +127,8 @@ CREATE TABLE `tbl_user_note_view`  (
   `id` bigint NOT NULL,
   `user_id` bigint NOT NULL COMMENT '用户id',
   `note_id` bigint NOT NULL COMMENT '笔记id',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '笔记观看数表' ROW_FORMAT = Dynamic;
 
