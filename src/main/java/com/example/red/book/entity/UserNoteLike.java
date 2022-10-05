@@ -8,7 +8,9 @@ import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -19,8 +21,8 @@ import lombok.Setter;
  * @author franky
  * @since 2022-09-19
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @TableName("tbl_user_note_like")
 @ApiModel(value = "UserNoteLike对象", description = "笔记点赞数表")
 public class UserNoteLike implements Serializable {

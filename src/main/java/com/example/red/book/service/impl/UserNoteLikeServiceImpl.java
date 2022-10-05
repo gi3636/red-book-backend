@@ -1,12 +1,15 @@
 package com.example.red.book.service.impl;
 
-import com.example.red.book.common.service.RedisService;
 import com.example.red.book.constant.NoteConstant;
+import com.example.red.book.entity.Note;
 import com.example.red.book.entity.UserNoteLike;
+import com.example.red.book.manager.UserNoteLikeManager;
 import com.example.red.book.mapper.UserNoteLikeMapper;
 import com.example.red.book.model.vo.LikeCountVO;
+import com.example.red.book.service.NoteService;
 import com.example.red.book.service.UserNoteLikeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,26 +28,32 @@ import java.util.Map;
  * @author franky
  * @since 2022-09-19
  */
+@Slf4j
 @Service
 public class UserNoteLikeServiceImpl extends ServiceImpl<UserNoteLikeMapper, UserNoteLike> implements UserNoteLikeService {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Autowired
+    private UserNoteLikeManager userNoteLikeManager;
+
+    @Autowired
+    private NoteService noteService;
+
     @Override
-    public List<UserNoteLike> getLikeDataFromRedis() {
+    public List<UserNoteLike> getLikedDataFromRedis() {
         Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(NoteConstant.USER_NOTE_LIKE_KEY, ScanOptions.NONE);
         List<UserNoteLike> list = new ArrayList<>();
-        while (cursor.hasNext()){
+        while (cursor.hasNext()) {
             Map.Entry<Object, Object> entry = cursor.next();
             String key = (String) entry.getKey();
-            //分离出 likedUserId，likedPostId
+            //分离出 userId，noteId
             String[] split = key.split("::");
             Long userId = Long.valueOf(split[0]);
             Long noteId = Long.valueOf(split[1]);
             Integer value = (Integer) entry.getValue();
 
-            //组装成 UserLike 对象
             UserNoteLike userLike = new UserNoteLike(userId, noteId, value);
             list.add(userLike);
             //存到 list 后从 Redis 中删除
@@ -58,15 +67,47 @@ public class UserNoteLikeServiceImpl extends ServiceImpl<UserNoteLikeMapper, Use
     public List<LikeCountVO> getLikedCountFromRedis() {
         Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(NoteConstant.USER_NOTE_LIKE_COUNT_KEY, ScanOptions.NONE);
         List<LikeCountVO> list = new ArrayList<>();
-        while (cursor.hasNext()){
+        while (cursor.hasNext()) {
             Map.Entry<Object, Object> map = cursor.next();
-            //将点赞数量存储在 LikedCountDT
-            String key = (String)map.getKey();
-            LikeCountVO dto = new LikeCountVO(key, (Integer) map.getValue());
+            //将点赞数量存储在 LikeCountVO
+            String key = (String) map.getKey();
+            LikeCountVO dto = new LikeCountVO(Long.valueOf(key), (Integer) map.getValue());
             list.add(dto);
             //从Redis中删除这条记录
             redisTemplate.opsForHash().delete(NoteConstant.USER_NOTE_LIKE_COUNT_KEY, key);
         }
         return list;
+    }
+
+    @Override
+    public void transLikedFromRedis2DB() {
+        List<UserNoteLike> list = this.getLikedDataFromRedis();
+        for (UserNoteLike like : list) {
+            UserNoteLike ul = userNoteLikeManager.getLikeByUserIdAndNoteId(like.getUserId(), like.getNoteId());
+            if (ul == null) {
+                //没有记录，直接存入
+                save(like);
+            } else {
+                //有记录，需要更新
+                ul.setStatus(like.getStatus());
+                updateById(ul);
+            }
+        }
+    }
+
+    @Override
+    public void transLikedCountFromRedis2DB() {
+        List<LikeCountVO> list = this.getLikedCountFromRedis();
+        for (LikeCountVO likeCountVO : list) {
+            Note note = noteService.selectById(likeCountVO.getNoteId());
+            //点赞数量属于无关紧要的操作，出错无需抛异常
+            if (note != null) {
+                log.info("更新笔记点赞数，笔记id：{}，点赞数：{}", note.getId(), likeCountVO.getLikeCount());
+                Integer likeNum = note.getLikeCount() + likeCountVO.getLikeCount();
+                note.setLikeCount(likeNum);
+                //更新点赞数量
+                noteService.updateById(note);
+            }
+        }
     }
 }

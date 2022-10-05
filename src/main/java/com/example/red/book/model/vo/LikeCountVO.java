@@ -7,10 +7,10 @@ public class LikeCountVO {
 
     private Integer likeCount;
 
-    private String key;
+    private Long noteId;
 
-    public LikeCountVO(String key, Integer value) {
-        this.key = key;
+    public LikeCountVO(Long noteId, Integer value) {
+        this.noteId = noteId;
         this.likeCount = value;
     }
 }

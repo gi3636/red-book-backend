@@ -8,6 +8,7 @@ import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -20,6 +21,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 @TableName("tbl_user_note_follow")
 @ApiModel(value = "UserNoteFollow对象", description = "笔记收藏数表")
 public class UserNoteFollow implements Serializable {
