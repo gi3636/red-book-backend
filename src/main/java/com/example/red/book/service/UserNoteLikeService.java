@@ -31,4 +31,8 @@ public interface UserNoteLikeService extends IService<UserNoteLike> {
      */
     void transLikedCountFromRedis2DB();
 
+    Boolean increaseLikeCount(Long noteId);
+
+    Boolean decreaseLikeCount(Long noteId);
+
 }

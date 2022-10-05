@@ -1,5 +1,6 @@
 package com.example.red.book.service.impl;
 
+import com.example.red.book.common.service.RedisService;
 import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.entity.UserNoteLike;
@@ -40,6 +41,9 @@ public class UserNoteLikeServiceImpl extends ServiceImpl<UserNoteLikeMapper, Use
 
     @Autowired
     private NoteService noteService;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public List<UserNoteLike> getLikedDataFromRedis() {
@@ -106,8 +110,31 @@ public class UserNoteLikeServiceImpl extends ServiceImpl<UserNoteLikeMapper, Use
                 Integer likeNum = note.getLikeCount() + likeCountVO.getLikeCount();
                 note.setLikeCount(likeNum);
                 //更新点赞数量
-                noteService.updateById(note);
+                noteService.update(note);
             }
+        }
+    }
+
+
+    @Override
+    public Boolean increaseLikeCount(Long noteId) {
+        try {
+            redisService.hIncr(NoteConstant.USER_NOTE_LIKE_COUNT_KEY, noteId + "", 1L);
+            return true;
+        } catch (Exception e) {
+            log.error("增加点赞数失败: {}", e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean decreaseLikeCount(Long noteId) {
+        try {
+            redisService.hDecr(NoteConstant.USER_NOTE_LIKE_COUNT_KEY, noteId + "", 1L);
+            return true;
+        } catch (Exception e) {
+            log.error("减少点赞数失败: {}", e.getMessage(), e);
+            return false;
         }
     }
 }

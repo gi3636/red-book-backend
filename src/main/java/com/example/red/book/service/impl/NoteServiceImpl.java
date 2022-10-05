@@ -22,6 +22,7 @@ import com.example.red.book.model.form.NoteSearchForm;
 import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.service.NoteService;
+import com.example.red.book.service.UserNoteLikeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,20 +42,17 @@ import java.io.IOException;
 @Service
 public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements NoteService {
 
-    @Autowired
-    private ElasticsearchClient esClient;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private RedisService redisService;
-
+    private static final String indexName = NoteConstant.INDEX;
     @Autowired
     NoteManager noteManager;
-
-    private static final String indexName = NoteConstant.INDEX;
-
+    @Autowired
+    private ElasticsearchClient esClient;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private UserNoteLikeService userNoteLikeService;
 
     @Override
     public Boolean add(NoteAddForm noteAddForm, Long userId) {
@@ -145,6 +143,18 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
+    public Boolean update(Note note) {
+        LambdaQueryWrapper<Note> wrapper = new LambdaQueryWrapper<Note>();
+        wrapper.eq(Note::getId, note.getId())
+                .eq(Note::getUserId, note.getUserId());
+        Boolean isSuccess = this.baseMapper.update(note, wrapper) > 0;
+        if (isSuccess) {
+            rabbitTemplate.convertAndSend(NoteConstant.EXCHANGE_NAME, NoteConstant.UPDATE_KEY, note);
+        }
+        return isSuccess;
+    }
+
+    @Override
     public Note selectById(Long id) {
         return this.baseMapper.selectById(id);
     }
@@ -158,12 +168,12 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     public Boolean like(Long noteId, Long userId) {
         String key = userId + "::" + noteId;
         Note note = baseMapper.selectById(noteId);
-        if (note == null){
+        if (note == null) {
             throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
         }
         try {
             redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 1);
-            increaseLikeCount(noteId);
+            userNoteLikeService.increaseLikeCount(noteId);
             return true;
         } catch (Exception e) {
             log.error("点赞失败: {}", e.getMessage(), e);
@@ -175,12 +185,12 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     public Boolean unlike(Long noteId, Long userId) {
         String key = userId + "::" + noteId;
         Note note = baseMapper.selectById(noteId);
-        if (note == null){
+        if (note == null) {
             throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
         }
         try {
             redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 0);
-            decreaseLikeCount(noteId);
+            userNoteLikeService.decreaseLikeCount(noteId);
             return true;
         } catch (Exception e) {
             log.error("取消点赞失败: {}", e.getMessage(), e);
@@ -188,23 +198,5 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         }
     }
 
-    public Boolean increaseLikeCount(Long noteId) {
-        try {
-            redisService.hIncr(NoteConstant.USER_NOTE_LIKE_COUNT_KEY, noteId + "", 1L);
-            return true;
-        } catch (Exception e) {
-            log.error("增加点赞数失败: {}", e.getMessage(), e);
-            return false;
-        }
-    }
 
-    public Boolean decreaseLikeCount(Long noteId) {
-        try {
-            redisService.hDecr(NoteConstant.USER_NOTE_LIKE_COUNT_KEY, noteId + "", 1L);
-            return true;
-        } catch (Exception e) {
-            log.error("减少点赞数失败: {}", e.getMessage(), e);
-            return false;
-        }
-    }
 }
