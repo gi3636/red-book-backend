@@ -51,8 +51,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private RedisService redisService;
-    @Autowired
-    private UserNoteLikeService userNoteLikeService;
+
 
     @Override
     public Boolean add(NoteAddForm noteAddForm, Long userId) {
@@ -162,40 +161,6 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     @Override
     public ElasticSearchResult<NoteDoc> search(NoteSearchForm noteSearchForm) {
         return noteManager.getNoteByEs(noteSearchForm);
-    }
-
-    @Override
-    public Boolean like(Long noteId, Long userId) {
-        String key = userId + "::" + noteId;
-        Note note = baseMapper.selectById(noteId);
-        if (note == null) {
-            throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
-        }
-        try {
-            redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 1);
-            userNoteLikeService.increaseLikeCount(noteId);
-            return true;
-        } catch (Exception e) {
-            log.error("点赞失败: {}", e.getMessage(), e);
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean unlike(Long noteId, Long userId) {
-        String key = userId + "::" + noteId;
-        Note note = baseMapper.selectById(noteId);
-        if (note == null) {
-            throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
-        }
-        try {
-            redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 0);
-            userNoteLikeService.decreaseLikeCount(noteId);
-            return true;
-        } catch (Exception e) {
-            log.error("取消点赞失败: {}", e.getMessage(), e);
-            return false;
-        }
     }
 
 

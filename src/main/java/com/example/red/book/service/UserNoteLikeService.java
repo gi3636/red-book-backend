@@ -16,7 +16,10 @@ import java.util.List;
  */
 public interface UserNoteLikeService extends IService<UserNoteLike> {
 
+    Boolean like(Long noteId, Long userId);
 
+    Boolean unlike(Long noteId, Long userId);
+    
     List<UserNoteLike> getLikedDataFromRedis();
 
     List<LikeCountVO> getLikedCountFromRedis();
