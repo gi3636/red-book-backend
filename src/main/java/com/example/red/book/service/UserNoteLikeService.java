@@ -16,7 +16,10 @@ import java.util.List;
  */
 public interface UserNoteLikeService extends IService<UserNoteLike> {
 
+    Boolean like(Long noteId, Long userId);
 
+    Boolean unlike(Long noteId, Long userId);
+    
     List<UserNoteLike> getLikedDataFromRedis();
 
     List<LikeCountVO> getLikedCountFromRedis();
@@ -30,5 +33,9 @@ public interface UserNoteLikeService extends IService<UserNoteLike> {
      * 将Redis中的点赞数量数据存入数据库
      */
     void transLikedCountFromRedis2DB();
+
+    Boolean increaseLikeCount(Long noteId);
+
+    Boolean decreaseLikeCount(Long noteId);
 
 }

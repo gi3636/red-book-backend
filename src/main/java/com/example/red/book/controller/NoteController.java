@@ -12,6 +12,7 @@ import com.example.red.book.model.form.NoteSearchForm;
 import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.service.NoteService;
+import com.example.red.book.service.UserNoteLikeService;
 import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,9 @@ public class NoteController {
 
     @Autowired
     private NoteService noteService;
+
+    @Autowired
+    private UserNoteLikeService userNoteLikeService;
 
     @Autowired
     private SessionUtil sessionUtil;
@@ -76,7 +80,7 @@ public class NoteController {
     @ApiOperation(value = "笔记点赞")
     @PostMapping("like/{noteId}")
     public CommonResult<Void> like(@PathVariable("noteId") Long noteId) {
-        Boolean isSuccess = noteService.like(noteId, sessionUtil.getUserId());
+        Boolean isSuccess = userNoteLikeService.like(noteId, sessionUtil.getUserId());
         if (!isSuccess) {
             return CommonResult.failed("点赞失败");
         }
@@ -86,7 +90,7 @@ public class NoteController {
     @ApiOperation(value = "笔记取消点赞")
     @PostMapping("unlike/{noteId}")
     public CommonResult<Void> unlike(@PathVariable("noteId") Long noteId) {
-        Boolean isSuccess = noteService.unlike(noteId, sessionUtil.getUserId());
+        Boolean isSuccess = userNoteLikeService.unlike(noteId, sessionUtil.getUserId());
         if (!isSuccess) {
             return CommonResult.failed("取消点赞失败");
         }

@@ -45,21 +45,17 @@ import java.util.Objects;
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
+    private static final String indexName = NoteConstant.INDEX;
     @Autowired
     NoteService noteService;
-
     @Autowired
     UserService userService;
-
     @Autowired
     CommentManager commentManager;
     @Autowired
     private ElasticsearchClient esClient;
-
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    private static final String indexName = NoteConstant.INDEX;
 
     @Override
     public Boolean add(CommentAddForm commentAddForm, Long userId) {
@@ -164,7 +160,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
 
-    public Boolean updateEsDoc(CommentDoc commentDoc) {
+    public void updateEsDoc(CommentDoc commentDoc) {
         UpdateRequest<CommentDoc, CommentDoc> request = new UpdateRequest.Builder<CommentDoc, CommentDoc>()
                 .id(commentDoc.getId() + "")
                 .index(indexName)
@@ -173,10 +169,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         try {
             UpdateResponse<CommentDoc> fileDocumentGetResponse = esClient.update(request, CommentDoc.class);
             log.info("更新笔记es文档 : {}", fileDocumentGetResponse.result());
-            return true;
         } catch (IOException e) {
             log.error("更新笔记es文档错误 : {}", e.getMessage(), e);
-            return false;
         }
     }
 }
