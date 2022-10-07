@@ -1,6 +1,7 @@
 package com.example.red.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.entity.Comment;
 import com.example.red.book.model.doc.CommentDoc;
@@ -22,7 +23,7 @@ public interface CommentService extends IService<Comment> {
 
     Boolean add(CommentAddForm commentAddForm, Long userId);
 
-    List<CommentVO> query(CommentQueryForm commentQueryForm, Long userId);
+    CommonPage<CommentVO> query(CommentQueryForm commentQueryForm, Long userId);
 
     void addEsDoc(CommentDoc commentDoc);
 

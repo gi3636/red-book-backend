@@ -7,7 +7,9 @@ import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.UpdateResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
@@ -94,7 +96,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public List<CommentVO> query(CommentQueryForm commentQueryForm, Long userId) {
+    public CommonPage<CommentVO> query(CommentQueryForm commentQueryForm, Long userId) {
         Note note = noteService.selectById(commentQueryForm.getNoteId());
         if (note == null) {
             throw GlobalException.from("笔记不存在");
@@ -107,7 +109,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getNoteId, commentQueryForm.getNoteId())
                 .isNull(Comment::getParentId);
-        List<Comment> comments = this.list(queryWrapper);
+        Page<Comment> page = new Page<>(commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
+        Page<Comment> commentPage = this.page(page, queryWrapper);
+        List<Comment> comments = commentPage.getRecords();
         List<CommentVO> commentVOList = CommentVO.convert(comments);
         for (CommentVO comment : commentVOList) {
             //查询二级评论
@@ -118,7 +122,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             List<CommentVO> commentVOList2 = CommentVO.convert(comments2);
             comment.setChildren(commentVOList2);
         }
-        return commentVOList;
+        Page<CommentVO> commentVOPage = new Page<>(commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
+        commentVOPage.setTotal(commentPage.getTotal());
+        commentVOPage.setPages(commentPage.getPages());
+        commentVOPage.setRecords(commentVOList);
+        return CommonPage.restPage(commentVOPage);
+
     }
 
     @Override

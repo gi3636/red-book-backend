@@ -1,6 +1,7 @@
 package com.example.red.book.controller;
 
 
+import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.CommonResult;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.manager.CommentManager;
@@ -57,8 +58,8 @@ public class CommentController {
 
     @ApiOperation(value = "查询笔记评论")
     @PostMapping("list")
-    public CommonResult<List<CommentVO>> list(@Validated @RequestBody CommentQueryForm commentQueryForm) {
-        List<CommentVO> commentVOList = commentService.query(commentQueryForm, sessionUtil.getUserId());
+    public CommonResult<CommonPage<CommentVO>> list(@Validated @RequestBody CommentQueryForm commentQueryForm) {
+        CommonPage<CommentVO> commentVOList = commentService.query(commentQueryForm, sessionUtil.getUserId());
         return CommonResult.success(commentVOList);
     }
 
