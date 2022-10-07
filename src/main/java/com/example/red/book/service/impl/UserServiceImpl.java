@@ -53,6 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw GlobalException.from(ResultCode.PASSWORD_WRONG);
         }
         UserVO userVo = new UserVO();
+        userVo.setId(user.getId());
         userVo.setUsername(user.getUsername());
         userVo.setMobile(user.getMobile());
         userVo.setNickname(user.getNickname());
