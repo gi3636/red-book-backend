@@ -20,9 +20,13 @@ import com.example.red.book.mapper.NoteMapper;
 import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.NoteQueryForm;
 import com.example.red.book.model.form.NoteSearchForm;
+import com.example.red.book.model.vo.NoteVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 @Slf4j
@@ -49,6 +53,16 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
         }
         Page<Note> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
         return this.baseMapper.selectPage(page, wrapper);
+    }
+
+    public Page<NoteVO> getNoteVOPage(NoteQueryForm noteQueryForm) {
+        Page<NoteVO> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
+        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, noteQueryForm);
+        for (NoteVO noteVO : noteVOPage.getRecords()) {
+            noteVO.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
+            noteVO.setImages(null);
+        }
+        return noteVOPage;
     }
 
 

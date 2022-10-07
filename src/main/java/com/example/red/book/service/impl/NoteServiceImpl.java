@@ -2,14 +2,15 @@ package com.example.red.book.service.impl;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.Refresh;
-import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.UpdateRequest;
+import co.elastic.clients.elasticsearch.core.UpdateResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
-import com.example.red.book.common.api.ResultCode;
-import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.common.service.RedisService;
 import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
@@ -22,7 +23,7 @@ import com.example.red.book.model.form.NoteSearchForm;
 import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.service.NoteService;
-import com.example.red.book.service.UserNoteLikeService;
+import com.example.red.book.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public Boolean add(NoteAddForm noteAddForm, Long userId) {
@@ -70,14 +74,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
 
     @Override
     public CommonPage<NoteVO> query(NoteQueryForm noteQueryForm) {
-        Page<Note> data = noteManager.getNotePage(noteQueryForm);
-        Page<NoteVO> newData = new Page<>();
-        newData.setRecords(NoteVO.convert(data.getRecords()));
-        newData.setTotal(data.getTotal());
-        newData.setCurrent(data.getCurrent());
-        newData.setSize(data.getSize());
-        newData.setPages(data.getPages());
-        return CommonPage.restPage(newData);
+        Page<NoteVO> data = noteManager.getNoteVOPage(noteQueryForm);
+        return CommonPage.restPage(data);
     }
 
     public Boolean addEsDoc(NoteDoc noteDoc) {

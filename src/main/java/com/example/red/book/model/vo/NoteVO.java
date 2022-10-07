@@ -20,6 +20,12 @@ public class NoteVO {
     @ApiModelProperty("用户Id")
     private Long userId;
 
+    @ApiModelProperty("用户昵称")
+    private String nickname;
+
+    @ApiModelProperty("用户头像")
+    private String avatar;
+
     @ApiModelProperty("笔记标题")
     private String title;
 
@@ -35,8 +41,11 @@ public class NoteVO {
     @ApiModelProperty("浏览数")
     private Integer viewCount;
 
+    @ApiModelProperty("用于获取数据")
+    private String images;
+
     @ApiModelProperty("笔记图片")
-    private List<String> images;
+    private List<String> imageList;
 
     @ApiModelProperty("是否公开")
     private Boolean isPublic;
@@ -62,7 +71,7 @@ public class NoteVO {
         noteVO.setFollowCount(note.getFollowCount());
         noteVO.setLikeCount(note.getLikeCount());
         noteVO.setViewCount(note.getViewCount());
-        noteVO.setImages(note.getImages() == null ? new ArrayList<>() : Arrays.asList((note.getImages().split(","))));
+        noteVO.setImageList(note.getImages() == null ? new ArrayList<>() : Arrays.asList((note.getImages().split(","))));
         noteVO.setIsPublic(note.getIsPublic());
         noteVO.setCreatedTime(note.getCreatedTime());
         return noteVO;

@@ -1,7 +1,11 @@
 package com.example.red.book.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.red.book.entity.Note;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.red.book.model.form.NoteQueryForm;
+import com.example.red.book.model.vo.NoteVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface NoteMapper extends BaseMapper<Note> {
 
+    Page<NoteVO> selectNoteList(Page<NoteVO> page, @Param("noteQueryForm") NoteQueryForm noteQueryForm);
 }
