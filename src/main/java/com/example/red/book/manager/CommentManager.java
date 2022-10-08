@@ -3,10 +3,13 @@ package com.example.red.book.manager;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
-import co.elastic.clients.elasticsearch._types.query_dsl.*;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.ExistsQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.common.api.ResultCode;
@@ -15,6 +18,8 @@ import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Comment;
 import com.example.red.book.mapper.CommentMapper;
 import com.example.red.book.model.doc.CommentDoc;
+import com.example.red.book.model.form.CommentQueryForm;
+import com.example.red.book.model.vo.CommentVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,6 +36,17 @@ public class CommentManager extends ServiceImpl<CommentMapper, Comment> {
 
     @Autowired
     private ElasticsearchClient esClient;
+
+
+    public Page<CommentVO> getCommentVOList(CommentQueryForm commentQueryForm) {
+        Page<CommentVO> page = new Page<>(commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
+        Page<CommentVO> commentVOPage = this.baseMapper.selectTopCommentList(page, commentQueryForm);
+        for (CommentVO commentVO : commentVOPage.getRecords()) {
+            List<CommentVO> commentChildrenList = this.baseMapper.selectCommentChildrenList(commentVO.getId());
+            commentVO.setChildren(commentChildrenList);
+        }
+        return commentVOPage;
+    }
 
     public CommentDoc getCommentDocByEs(Long commentId) {
         MatchQuery matchQuery = new MatchQuery.Builder()

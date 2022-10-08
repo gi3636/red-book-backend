@@ -4,15 +4,55 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.red.book.entity.Comment">
-        <id column="id" property="id" />
-        <result column="note_id" property="noteId" />
-        <result column="user_id" property="userId" />
-        <result column="parent_id" property="parentId" />
-        <result column="content" property="content" />
-        <result column="like_count" property="likeCount" />
-        <result column="created_time" property="createdTime" />
-        <result column="updated_time" property="updatedTime" />
-        <result column="deleted" property="deleted" />
+        <id column="id" property="id"/>
+        <result column="note_id" property="noteId"/>
+        <result column="user_id" property="userId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="content" property="content"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="deleted" property="deleted"/>
     </resultMap>
+    
+    <select id="selectTopCommentList" resultType="com.example.red.book.model.vo.CommentVO">
+        select c.id,
+               c.note_id,
+               c.user_id,
+               c.to_user_id,
+               c.parent_id,
+               c.content,
+               c.like_count,
+               c.created_time,
+               u.nickname,
+               u.avatar
+        from tbl_comment c
+                 left join tbl_user u on c.user_id = u.id
+        where c.parent_id is null
+          and c.note_id = #{commentQueryForm.noteId}
+          and c.deleted = 0
+        order by c.created_time desc
+    </select>
+
+    <select id="selectCommentChildrenList" resultType="com.example.red.book.model.vo.CommentVO">
+        select c.id,
+               c.note_id,
+               c.user_id,
+               c.to_user_id,
+               c.parent_id,
+               c.content,
+               c.like_count,
+               c.created_time,
+               u.nickname,
+               u.avatar,
+               toUser.nickname as toUserNickname
+        from tbl_comment c
+                 left join tbl_user u on c.user_id = u.id
+                 left join tbl_comment child on c.parent_id = child.id
+                 left join tbl_user toUser on c.to_user_id = toUser.id
+        where c.parent_id = #{parentId}
+          and c.deleted = 0
+        order by c.created_time desc
+    </select>
 
 </mapper>

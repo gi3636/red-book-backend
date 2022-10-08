@@ -6,7 +6,6 @@ import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.UpdateResponse;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.CommonPage;
@@ -32,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -106,26 +104,28 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             throw GlobalException.from("笔记不公开");
         }
         //查询一级评论
-        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getNoteId, commentQueryForm.getNoteId())
-                .isNull(Comment::getParentId);
-        Page<Comment> page = new Page<>(commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
-        Page<Comment> commentPage = this.page(page, queryWrapper);
-        List<Comment> comments = commentPage.getRecords();
-        List<CommentVO> commentVOList = CommentVO.convert(comments);
-        for (CommentVO comment : commentVOList) {
-            //查询二级评论
-            LambdaQueryWrapper<Comment> queryWrapper2 = new LambdaQueryWrapper<>();
-            queryWrapper2.eq(Comment::getNoteId, commentQueryForm.getNoteId())
-                    .eq(Comment::getParentId, comment.getId());
-            List<Comment> comments2 = this.list(queryWrapper2);
-            List<CommentVO> commentVOList2 = CommentVO.convert(comments2);
-            comment.setChildren(commentVOList2);
-        }
-        Page<CommentVO> commentVOPage = new Page<>(commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
-        commentVOPage.setTotal(commentPage.getTotal());
-        commentVOPage.setPages(commentPage.getPages());
-        commentVOPage.setRecords(commentVOList);
+        //LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        //queryWrapper.eq(Comment::getNoteId, commentQueryForm.getNoteId())
+        //        .isNull(Comment::getParentId);
+        //Page<Comment> page = new Page<>(commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
+        //Page<Comment> commentPage = this.page(page, queryWrapper);
+        //List<Comment> comments = commentPage.getRecords();
+        //List<CommentVO> commentVOList = CommentVO.convert(comments);
+        //for (CommentVO comment : commentVOList) {
+        //    //查询二级评论
+        //    LambdaQueryWrapper<Comment> queryWrapper2 = new LambdaQueryWrapper<>();
+        //    queryWrapper2.eq(Comment::getNoteId, commentQueryForm.getNoteId())
+        //            .eq(Comment::getParentId, comment.getId());
+        //    List<Comment> comments2 = this.list(queryWrapper2);
+        //    List<CommentVO> commentVOList2 = CommentVO.convert(comments2);
+        //    comment.setChildren(commentVOList2);
+        //}
+        //Page<CommentVO> commentVOPage = new Page<>(commentQueryForm.getCurrentPage(), commentQueryForm.getSize());
+        //commentVOPage.setTotal(commentPage.getTotal());
+        //commentVOPage.setPages(commentPage.getPages());
+        //commentVOPage.setRecords(commentVOList);
+
+        Page<CommentVO> commentVOPage = commentManager.getCommentVOList(commentQueryForm);
         return CommonPage.restPage(commentVOPage);
 
     }

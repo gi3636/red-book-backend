@@ -25,6 +25,15 @@ public class CommentVO {
     @ApiModelProperty("回复的对象id")
     private Long toUserId;
 
+    @ApiModelProperty("回复的对象昵称")
+    private String toUserNickname;
+
+    @ApiModelProperty("用户昵称")
+    private String nickname;
+
+    @ApiModelProperty("用户头像")
+    private String avatar;
+
     @ApiModelProperty("评论内容")
     private String content;
 
@@ -35,7 +44,7 @@ public class CommentVO {
     private Date createdTime;
 
     @ApiModelProperty("子评论")
-    private List<CommentVO> children;
+    private List<CommentVO> children = new ArrayList<>();
 
     public static List<CommentVO> convert(List<Comment> comments) {
         List<CommentVO> commentVOList = new ArrayList<>();

@@ -35,7 +35,8 @@
         from tbl_note n
                  left join tbl_user u on n.user_id = u.id
         where n.deleted = 0
-          and n.is_public = 1
+          and n.is_public = #{noteQueryForm.isPublic}
+          and n.user_id = #{noteQueryForm.userId}
         order by n.created_time desc
     </select>
 
