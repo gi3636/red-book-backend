@@ -60,6 +60,14 @@ public class NoteController {
         return CommonResult.success(noteList);
     }
 
+    @ApiOperation(value = "推荐笔记")
+    @GetMapping("recommend")
+    public CommonResult<CommonPage<NoteVO>> recommend() {
+        CommonPage<NoteVO> noteList = noteService.queryRecommend();
+        return CommonResult.success(noteList);
+    }
+
+
     @ApiOperation(value = "修改笔记")
     @PostMapping("update")
     public CommonResult<CommonPage<Note>> update(@Validated @RequestBody NoteUpdateForm noteUpdateForm) {

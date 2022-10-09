@@ -17,5 +17,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface NoteMapper extends BaseMapper<Note> {
 
-    Page<NoteVO> selectNoteList(Page<NoteVO> page, @Param("noteQueryForm") NoteQueryForm noteQueryForm);
+    Page<NoteVO> selectNoteList(Page<NoteVO> page, @Param("userId") Long userId, @Param("isPublic") Boolean isPublic);
 }

@@ -40,5 +40,5 @@ public interface NoteService extends IService<Note> {
 
     ElasticSearchResult<NoteDoc> search(NoteSearchForm noteSearchForm);
 
-
+    CommonPage<NoteVO> queryRecommend();
 }

@@ -61,7 +61,10 @@ public class CommentManager extends ServiceImpl<CommentMapper, Comment> {
         try {
             SearchResponse<CommentDoc> searchResponse = esClient.search(request, CommentDoc.class);
             List<CommentDoc> list = searchResponse.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
-            return list.get(0);
+            if (list.size() > 0) {
+                return list.get(0);
+            }
+            return null;
         } catch (Exception e) {
             log.error("查询数据：{}", commentId);
             log.error("查询文档操作失败: {} ", e.getMessage(), e);

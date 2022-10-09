@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * <p>
@@ -161,5 +163,15 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
         return noteManager.getNoteByEs(noteSearchForm);
     }
 
+    @Override
+    public CommonPage<NoteVO> queryRecommend() {
+        Page<NoteVO> page = new Page<>(1, 20);
+        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, null, true);
+        for (NoteVO noteVO : noteVOPage.getRecords()) {
+            noteVO.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
+            noteVO.setImages(null);
+        }
+        return CommonPage.restPage(noteVOPage);
+    }
 
 }
