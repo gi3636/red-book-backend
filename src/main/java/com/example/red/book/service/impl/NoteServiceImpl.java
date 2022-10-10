@@ -75,8 +75,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
-    public CommonPage<NoteVO> query(NoteQueryForm noteQueryForm) {
-        Page<NoteVO> data = noteManager.getNoteVOPage(noteQueryForm);
+    public CommonPage<NoteVO> query(NoteQueryForm noteQueryForm, Long selfId) {
+        Page<NoteVO> data = noteManager.getNoteVOPage(noteQueryForm, selfId);
         return CommonPage.restPage(data);
     }
 
@@ -164,9 +164,9 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
-    public CommonPage<NoteVO> queryRecommend() {
+    public CommonPage<NoteVO> queryRecommend(Long selfId) {
         Page<NoteVO> page = new Page<>(1, 20);
-        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, null, true);
+        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, null, true, selfId);
         for (NoteVO noteVO : noteVOPage.getRecords()) {
             noteVO.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
             noteVO.setImages(null);

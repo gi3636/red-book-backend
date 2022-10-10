@@ -55,9 +55,9 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
         return this.baseMapper.selectPage(page, wrapper);
     }
 
-    public Page<NoteVO> getNoteVOPage(NoteQueryForm noteQueryForm) {
+    public Page<NoteVO> getNoteVOPage(NoteQueryForm noteQueryForm, Long selfId) {
         Page<NoteVO> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
-        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, noteQueryForm.getUserId(), noteQueryForm.getIsPublic());
+        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, noteQueryForm.getUserId(), noteQueryForm.getIsPublic(), selfId);
         for (NoteVO noteVO : noteVOPage.getRecords()) {
             noteVO.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
             noteVO.setImages(null);

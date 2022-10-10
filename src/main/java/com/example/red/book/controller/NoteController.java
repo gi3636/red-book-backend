@@ -56,14 +56,14 @@ public class NoteController {
     @ApiOperation(value = "查询笔记")
     @PostMapping("list")
     public CommonResult<CommonPage<NoteVO>> list(@Validated @RequestBody NoteQueryForm noteQueryForm) {
-        CommonPage<NoteVO> noteList = noteService.query(noteQueryForm);
+        CommonPage<NoteVO> noteList = noteService.query(noteQueryForm, sessionUtil.getUserId());
         return CommonResult.success(noteList);
     }
 
     @ApiOperation(value = "推荐笔记")
     @GetMapping("recommend")
     public CommonResult<CommonPage<NoteVO>> recommend() {
-        CommonPage<NoteVO> noteList = noteService.queryRecommend();
+        CommonPage<NoteVO> noteList = noteService.queryRecommend(sessionUtil.getUserId());
         return CommonResult.success(noteList);
     }
 

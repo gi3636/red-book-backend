@@ -50,6 +50,9 @@ public class NoteVO {
     @ApiModelProperty("是否公开")
     private Boolean isPublic;
 
+    @ApiModelProperty("是否点赞")
+    private Boolean isLike;
+
     @ApiModelProperty("创建时间;创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createdTime;

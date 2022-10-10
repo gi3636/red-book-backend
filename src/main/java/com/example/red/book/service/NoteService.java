@@ -24,7 +24,7 @@ public interface NoteService extends IService<Note> {
     Boolean add(NoteAddForm noteAddForm, Long userId);
 
 
-    CommonPage<NoteVO> query(NoteQueryForm noteQueryForm);
+    CommonPage<NoteVO> query(NoteQueryForm noteQueryForm, Long selfId);
 
     Boolean addEsDoc(NoteDoc noteDoc);
 
@@ -40,5 +40,5 @@ public interface NoteService extends IService<Note> {
 
     ElasticSearchResult<NoteDoc> search(NoteSearchForm noteSearchForm);
 
-    CommonPage<NoteVO> queryRecommend();
+    CommonPage<NoteVO> queryRecommend(Long selfId);
 }
