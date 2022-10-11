@@ -75,6 +75,7 @@ CREATE TABLE `tbl_note`
     `follow_count` int                          DEFAULT '0' COMMENT '笔记收藏数',
     `like_count`   int                          DEFAULT '0' COMMENT '笔记点赞数',
     `view_count`   int                          DEFAULT '0' COMMENT '浏览数',
+    `status`       int                          DEFAULT '0' COMMENT '审核状态 0是未审核 1是审核通过 2是审核不通过',
     `images`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '笔记图片,多个图片用逗号分隔',
     `is_public`    tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '是否公开 1是公开，0是个人可见',
     `created_time` datetime                     DEFAULT NULL COMMENT '创建时间',

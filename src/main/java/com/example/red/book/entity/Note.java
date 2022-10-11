@@ -60,6 +60,9 @@ public class Note implements Serializable {
     @ApiModelProperty("是否公开")
     private Boolean isPublic;
 
+    @ApiModelProperty("审核状态 0是未审核 1是审核通过 2是审核不通过")
+    private Integer status;
+    
     @ApiModelProperty("创建时间;创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createdTime;
