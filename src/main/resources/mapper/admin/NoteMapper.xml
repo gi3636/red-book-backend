@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.red.book.admin.mapper.NoteMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.red.book.entity.Note">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="follow_count" property="followCount"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="view_count" property="viewCount"/>
+        <result column="images" property="images"/>
+        <result column="is_public" property="isPublic"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <select id="selectNoteList" resultType="com.example.red.book.model.vo.NoteVO">
+        select n.id,
+        n.user_id,
+        n.title,
+        n.content,
+        n.follow_count,
+        n.like_count,
+        n.view_count,
+        n.images,
+        n.is_public,
+        n.created_time,
+        n.updated_time,
+        u.nickname,
+        unl.status as isLike
+        from tbl_note n
+        left join tbl_user u on n.user_id = u.id
+        left join tbl_user_note_like unl on n.id = unl.note_id and unl.user_id = #{selfId}
+        where n.deleted = 0
+        <if test="form.noteId != null">
+            and n.id = #{form.noteId}
+        </if>
+        <if test="form.isPublic != null">
+            and n.is_public = #{form.isPublic}
+        </if>
+        <if test="form.userId != null">
+            and n.user_id = #{form.userId}
+        </if>
+        <if test="form.status != null">
+            and n.status = #{form.status}
+        </if>
+        order by n.created_time desc
+    </select>
+
+</mapper>
