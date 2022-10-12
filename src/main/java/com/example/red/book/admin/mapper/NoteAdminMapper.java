@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Param;
  * @author franky
  * @since 2022-09-19
  */
-public interface NoteMapper extends BaseMapper<Note> {
+public interface NoteAdminMapper extends BaseMapper<Note> {
 
     Page<NoteVO> selectNoteList(Page<NoteVO> page, @Param("form") NoteQueryForm form);
 }

@@ -6,7 +6,6 @@ import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.doc.NoteDoc;
-import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteSearchForm;
 import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
@@ -19,7 +18,7 @@ import com.example.red.book.model.vo.NoteVO;
  * @author franky
  * @since 2022-09-17
  */
-public interface NoteService extends IService<Note> {
+public interface NoteAdminService extends IService<Note> {
 
     Boolean updateEsDoc(NoteDoc noteDoc);
 

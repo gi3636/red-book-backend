@@ -6,6 +6,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,11 +22,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class RedBookApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RedBookApplication.class, args);
+        ConfigurableApplicationContext run = SpringApplication.run(RedBookApplication.class, args);
+        System.out.println(111);
+
     }
 
     @Bean
-    public MessageConverter messageConverter(){
+    public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 }

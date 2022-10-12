@@ -11,7 +11,7 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.red.book.admin.mapper.NoteMapper;
+import com.example.red.book.admin.mapper.NoteAdminMapper;
 import com.example.red.book.admin.model.form.NoteQueryForm;
 import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.common.api.ResultCode;
@@ -31,7 +31,7 @@ import java.util.Arrays;
 
 @Slf4j
 @Component
-public class NoteManager extends ServiceImpl<NoteMapper, Note> {
+public class NoteAdminManager extends ServiceImpl<NoteAdminMapper, Note> {
 
     private static final String indexName = NoteConstant.INDEX;
 
