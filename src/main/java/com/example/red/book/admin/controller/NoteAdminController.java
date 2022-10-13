@@ -1,6 +1,7 @@
 package com.example.red.book.admin.controller;
 
 import com.example.red.book.admin.model.form.NoteQueryForm;
+import com.example.red.book.admin.model.form.NoteUpdateForm;
 import com.example.red.book.admin.service.NoteAdminService;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.CommonResult;
@@ -8,7 +9,6 @@ import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.NoteSearchForm;
-import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
@@ -40,7 +40,7 @@ public class NoteAdminController {
     @ApiOperation(value = "修改笔记")
     @PostMapping("update")
     public CommonResult<CommonPage<Note>> update(@Validated @RequestBody NoteUpdateForm noteUpdateForm) {
-        Boolean isSuccess = noteAdminService.update(noteUpdateForm, sessionUtil.getUserId());
+        Boolean isSuccess = noteAdminService.update(noteUpdateForm);
         if (!isSuccess) {
             return CommonResult.failed("修改失败");
         }

@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.admin.manager.NoteAdminManager;
 import com.example.red.book.admin.mapper.NoteAdminMapper;
 import com.example.red.book.admin.model.form.NoteQueryForm;
+import com.example.red.book.admin.model.form.NoteUpdateForm;
 import com.example.red.book.admin.service.NoteAdminService;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
@@ -17,11 +18,11 @@ import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.NoteSearchForm;
-import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,27 +69,23 @@ public class NoteAdminServiceImpl extends ServiceImpl<NoteAdminMapper, Note> imp
         }
     }
 
-
     @Override
-    public Boolean update(NoteUpdateForm noteUpdateForm, Long userId) {
+    public Boolean update(NoteUpdateForm noteUpdateForm) {
         Note note = new Note();
         note.setId(noteUpdateForm.getId());
-        note.setUserId(userId);
+        note.setUserId(noteUpdateForm.getUserId());
         note.setTitle(noteUpdateForm.getTitle());
         note.setContent(noteUpdateForm.getContent());
         note.setIsPublic(noteUpdateForm.getIsPublic());
         note.setImages(noteUpdateForm.getImages());
-        LambdaQueryWrapper<Note> wrapper = new LambdaQueryWrapper<Note>();
-        wrapper.eq(Note::getId, noteUpdateForm.getId())
-                .eq(Note::getUserId, userId);
-        Boolean isSuccess = this.baseMapper.update(note, wrapper) > 0;
+        Boolean isSuccess = this.baseMapper.updateById(note) > 0;
         if (isSuccess) {
             rabbitTemplate.convertAndSend(NoteConstant.EXCHANGE_NAME, NoteConstant.UPDATE_KEY, note);
         }
         return isSuccess;
     }
 
-    @Override
+
     public Boolean update(Note note) {
         LambdaQueryWrapper<Note> wrapper = new LambdaQueryWrapper<Note>();
         wrapper.eq(Note::getId, note.getId())
@@ -113,7 +110,7 @@ public class NoteAdminServiceImpl extends ServiceImpl<NoteAdminMapper, Note> imp
     @Override
     public CommonPage<NoteVO> query(NoteQueryForm noteQueryForm) {
         Page<NoteVO> data = noteAdminManager.getNoteVOPage(noteQueryForm);
-        return null;
+        return CommonPage.restPage(data);
     }
 
 }
