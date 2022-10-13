@@ -30,11 +30,9 @@
         n.is_public,
         n.created_time,
         n.updated_time,
-        u.nickname,
-        unl.status as isLike
+        u.nickname
         from tbl_note n
         left join tbl_user u on n.user_id = u.id
-        left join tbl_user_note_like unl on n.id = unl.note_id and unl.user_id = #{selfId}
         where n.deleted = 0
         <if test="form.noteId != null">
             and n.id = #{form.noteId}

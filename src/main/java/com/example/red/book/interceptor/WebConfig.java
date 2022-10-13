@@ -51,6 +51,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         registry.addInterceptor(authInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/")
+                .excludePathPatterns("/admin/**")
                 .excludePathPatterns("/v2/api-docs")
                 .excludePathPatterns("/v3/api-docs")
                 .excludePathPatterns("/v3/api-docs/**")

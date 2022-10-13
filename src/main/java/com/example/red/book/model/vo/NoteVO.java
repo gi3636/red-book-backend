@@ -2,6 +2,7 @@ package com.example.red.book.model.vo;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.example.red.book.entity.Note;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class NoteVO {
 
     @ApiModelProperty("笔记Id")

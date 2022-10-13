@@ -16,15 +16,19 @@ public enum ResultCode implements IErrorCode {
     PASSWORD_WRONG(20002, "密码错误"),
     USER_EXITS(20003, "用户已存在"),
     PASSWORD_NOT_SAME(20004, "密码不一致"),
+    USER_NOT_LOGIN(20005, "用户未登录"),
     GET_STS_TOKEN_ERROR(20100, "获取stsToken失败"),
     UPLOAD_ERROR(20101, "上传文件失败"),
     FILE_EMPTY(20102, "文件为空"),
+
     CREATED_INDEX_FAILED(20201, "创建索引失败"),
+
     INDEX_EXISTS(20202, "索引已存在"),
     QueryError(20203, "查询数据错误"),
     NOTE_NOT_EXIST(20204, "笔记不存在"),
     COMMENT_NOT_EXIST(20205, "评论不存在"),
-    COMMENT_NOTE_NOT_MATCH(20206, "评论笔记不匹配");
+    COMMENT_NOTE_NOT_MATCH(20206, "评论笔记不匹配"),
+    LOGIN_FAILED(20207, "登录失败");
 
 
     private long code;

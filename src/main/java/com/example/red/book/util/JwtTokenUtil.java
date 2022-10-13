@@ -2,6 +2,8 @@ package com.example.red.book.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.example.red.book.admin.entity.LoginUser;
+import com.example.red.book.admin.entity.SysUser;
 import com.example.red.book.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -98,7 +100,7 @@ public class JwtTokenUtil {
             Claims claims = getClaimsFromToken(token);
             id = Long.valueOf(claims.get(CLAIM_KEY_ID).toString());
         } catch (Exception e) {
-            log.info("claims.getSubject: {}",e);
+            log.info("claims.getSubject: {}", e);
             id = null;
         }
         return id;
@@ -155,10 +157,19 @@ public class JwtTokenUtil {
      * 根据用户信息生成token
      */
     public String generateToken(User user) {
-        log.info("user:"+user);
+        log.info("user:" + user);
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, user.getUsername());
         claims.put(CLAIM_KEY_ID, user.getId());
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
+    }
+
+
+    public String generateToken(Long id, String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, username);
+        claims.put(CLAIM_KEY_ID, id);
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }

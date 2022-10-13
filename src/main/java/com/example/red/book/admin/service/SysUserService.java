@@ -2,6 +2,8 @@ package com.example.red.book.admin.service;
 
 import com.example.red.book.admin.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.red.book.admin.model.vo.SysUserVO;
+import com.example.red.book.model.vo.UserVO;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysUserService extends IService<SysUser> {
 
+    SysUserVO login(String username, String password);
 }
