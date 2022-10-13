@@ -56,6 +56,13 @@ public class AuthAdminController {
         return CommonResult.success(userVo);
     }
 
+    @ApiOperation(value = "用户登出")
+    @GetMapping("logout")
+    public CommonResult<SysUserVO> logout() {
+        Boolean isSuccess = sysUserService.logout();
+        return CommonResult.success(null);
+    }
+
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody

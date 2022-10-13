@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -54,5 +55,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysUserVO sysUserVO = new SysUserVO(loginUser.getSysUser());
         sysUserVO.setToken(token);
         return sysUserVO;
+    }
+
+    @Override
+    public Boolean logout() {
+        //获取SecurityContextHolder中的用户信息
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        Long id = loginUser.getSysUser().getId();
+        redisService.del(loginKey + id);
+        //删除redis的值
+        return true;
     }
 }

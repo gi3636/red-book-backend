@@ -16,4 +16,6 @@ import com.example.red.book.model.vo.UserVO;
 public interface SysUserService extends IService<SysUser> {
 
     SysUserVO login(String username, String password);
+
+    Boolean logout();
 }

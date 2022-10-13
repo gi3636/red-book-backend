@@ -7,6 +7,7 @@ import com.example.red.book.common.api.ResultCode;
 import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.common.service.RedisService;
 import com.example.red.book.util.JwtTokenUtil;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-@Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -32,6 +32,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("进入JwtAuthenticationTokenFilter过滤器");
         //获取token
         String token = request.getHeader("token");
         if (!StringUtils.hasText(token)) {
