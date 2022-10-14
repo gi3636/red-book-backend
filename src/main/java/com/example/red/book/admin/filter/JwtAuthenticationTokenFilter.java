@@ -47,11 +47,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //解析token
         Long id = jwtTokenUtil.getIdFromToken(token);
         //从redis获取用户信息
-        SysUser sysUser = (SysUser) redisService.get(loginKey + id);
-        if (Objects.isNull(sysUser)) {
+        //SysUser sysUser = (SysUser) redisService.get(loginKey + id);
+
+        //LoginUser loginUser = new LoginUser(sysUser);
+        LoginUser loginUser = (LoginUser) redisService.get(loginKey + id);
+        if (Objects.isNull(loginUser)) {
             throw GlobalException.from(ResultCode.USER_NOT_LOGIN);
         }
-        LoginUser loginUser = new LoginUser(sysUser);
         //Todo 获取权限信息
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         //存入securityContextHolder

@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -33,7 +36,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw GlobalException.from(ResultCode.USER_NOT_FOUND);
         }
         //Todo 查询对用用户权限
+        List<String> permissions = new ArrayList<>(Arrays.asList("test", "admin"));
 
-        return new LoginUser(user);
+
+        return new LoginUser(user, permissions);
     }
 }

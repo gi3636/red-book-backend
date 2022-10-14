@@ -1,13 +1,18 @@
 package com.example.red.book.admin.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +22,31 @@ public class LoginUser implements UserDetails {
 
     private SysUser sysUser;
 
+    private List<String> permissions = new ArrayList<>();
+
+    @JSONField(serialize = false)
+    private List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+    public LoginUser(SysUser sysUser) {
+        this.sysUser = sysUser;
+    }
+
+    public LoginUser(SysUser user, List<String> permissions) {
+        this.permissions = permissions;
+        this.sysUser = user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        //把permissions转换成GrantedAuthority
+        if (authorities != null && authorities.size() > 0) {
+            return authorities;
+        }
+        for (String permission : permissions) {
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(permission);
+            authorities.add(authority);
+        }
+        return authorities;
     }
 
     @Override

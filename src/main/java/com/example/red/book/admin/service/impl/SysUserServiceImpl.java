@@ -51,7 +51,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         Long userId = loginUser.getSysUser().getId();
         String token = jwtTokenUtil.generateToken(userId, loginUser.getUsername());
-        redisService.set(loginKey + userId, loginUser.getSysUser());
+        redisService.set(loginKey + userId, loginUser);
         SysUserVO sysUserVO = new SysUserVO(loginUser.getSysUser());
         sysUserVO.setToken(token);
         return sysUserVO;
@@ -61,6 +61,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Boolean logout() {
         //获取SecurityContextHolder中的用户信息
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw GlobalException.from(ResultCode.USER_NOT_LOGIN);
+        }
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long id = loginUser.getSysUser().getId();
         redisService.del(loginKey + id);
