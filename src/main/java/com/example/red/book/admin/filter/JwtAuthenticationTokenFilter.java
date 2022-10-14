@@ -23,10 +23,13 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    @Autowired
     private RedisService redisService;
+
+    public JwtAuthenticationTokenFilter(JwtTokenUtil jwtTokenUtil, RedisService redisService) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.redisService = redisService;
+    }
 
     private static final String loginKey = SysUserConstant.LOGIN_KEY;
 
@@ -40,6 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        System.out.println("token: " + token);
         //解析token
         Long id = jwtTokenUtil.getIdFromToken(token);
         //从redis获取用户信息

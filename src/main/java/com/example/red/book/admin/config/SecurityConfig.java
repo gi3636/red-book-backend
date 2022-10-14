@@ -1,6 +1,8 @@
 package com.example.red.book.admin.config;
 
 import com.example.red.book.admin.filter.JwtAuthenticationTokenFilter;
+import com.example.red.book.common.service.RedisService;
+import com.example.red.book.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,11 @@ import javax.annotation.Resource;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private RedisService redisService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
 
         //把token校验过滤器添加到过滤器链中
-        http.addFilterBefore(new JwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationTokenFilter(jwtTokenUtil, redisService), UsernamePasswordAuthenticationFilter.class);
     }
 
 
