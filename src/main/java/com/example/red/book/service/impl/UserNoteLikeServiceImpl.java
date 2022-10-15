@@ -56,14 +56,27 @@ public class UserNoteLikeServiceImpl extends ServiceImpl<UserNoteLikeMapper, Use
             throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
         }
         try {
-            redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 1);
-            this.increaseLikeCount(noteId);
+            Integer status = (Integer) redisService.hGet(NoteConstant.USER_NOTE_LIKE_KEY, key);
+            UserNoteLike like = userNoteLikeManager.getLikeByUserIdAndNoteId(userId, noteId);
+            // 第一次点赞 数据库以及redis都没有数据
+            if (status == null && like == null) {
+                redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 1);
+                this.increaseLikeCount(noteId);
+            } else if (status != null && status == 0 && (like == null || like.getStatus() == 0)) {
+                // 之前取消点赞了，现在重新点赞
+                redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 1);
+                this.increaseLikeCount(noteId);
+            } else if (status == null && like.getStatus() == 0) {
+                redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 1);
+                this.increaseLikeCount(noteId);
+            }
             return true;
         } catch (Exception e) {
             log.error("点赞失败: {}", e.getMessage(), e);
             return false;
         }
     }
+
 
     @Override
     public Boolean unlike(Long noteId, Long userId) {
@@ -73,8 +86,15 @@ public class UserNoteLikeServiceImpl extends ServiceImpl<UserNoteLikeMapper, Use
             throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
         }
         try {
-            redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 0);
-            this.decreaseLikeCount(noteId);
+            Integer status = (Integer) redisService.hGet(NoteConstant.USER_NOTE_LIKE_KEY, key);
+            UserNoteLike like = userNoteLikeManager.getLikeByUserIdAndNoteId(userId, noteId);
+            if (status == null && like.getStatus() == 1) {
+                redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 0);
+                this.decreaseLikeCount(noteId);
+            } else if (status != null && status == 1 && like.getStatus() == 1) {
+                redisService.hSet(NoteConstant.USER_NOTE_LIKE_KEY, key, 0);
+                this.decreaseLikeCount(noteId);
+            }
             return true;
         } catch (Exception e) {
             log.error("取消点赞失败: {}", e.getMessage(), e);
