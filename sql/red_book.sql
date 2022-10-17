@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 12/10/2022 15:20:56
+ Date: 17/10/2022 18:51:37
 */
 
 SET NAMES utf8mb4;
@@ -75,6 +75,7 @@ CREATE TABLE `tbl_note` (
   `view_count` int DEFAULT '0' COMMENT '浏览数',
   `images` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '笔记图片,多个图片用逗号分隔',
   `is_public` tinyint(1) unsigned zerofill DEFAULT NULL COMMENT '是否公开 1是公开，0是个人可见',
+  `status` int DEFAULT '0' COMMENT '审核状态 0是未审核 1是审核通过 2是审核不通过',
   `created_time` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_time` datetime DEFAULT NULL COMMENT '更新时间',
   `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除;1是删除，0是不删除',
@@ -85,14 +86,14 @@ CREATE TABLE `tbl_note` (
 -- Records of tbl_note
 -- ----------------------------
 BEGIN;
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1577468339544956929, 125878278, '这是第一篇标题', '这是第一篇的内容', 0, 3, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400', 1, '2022-10-05 09:18:55', '2022-10-05 10:21:01', 0);
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1578198538079236098, 125878278, '还理置族民打用', '这是第2篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400', 0, '2022-10-07 09:40:28', '2022-10-07 09:40:28', 0);
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1578198550364352514, 125878278, '始例多约会', '这是第3篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 0, '2022-10-07 09:40:31', '2022-10-07 09:40:31', 0);
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1578198557989597186, 125878278, '界民里所', '这是第4篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 0, '2022-10-07 09:40:32', '2022-10-07 09:40:32', 0);
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1578198569993695234, 125878278, '思方其者结', '这是第8篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 0, '2022-10-07 09:40:35', '2022-10-07 09:40:35', 0);
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1578198582954094594, 125878278, '物起解阶太', '这是第5篇的内容', 0, 2, 0, 'http://dummyimage.com/400x400', 1, '2022-10-07 09:40:38', '2022-10-10 19:00:56', 0);
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1578198623496237058, 125878278, '组基圆等', '这是第6篇的内容', 0, 4, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 1, '2022-10-07 09:40:48', '2022-10-10 19:06:55', 0);
-INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `created_time`, `updated_time`, `deleted`) VALUES (1578198657126166530, 125878278, '本装着图相', '这是第7篇的内容st', 0, 5, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400', 1, '2022-10-07 09:40:56', '2022-10-10 19:06:55', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1577468339544956929, 125878278, '这是第一篇标题', '这是第一篇的内容', 0, 3, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400', 1, NULL, '2022-10-05 09:18:55', '2022-10-05 10:21:01', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1578198538079236098, 125878278, '还理置族民打用', '这是第2篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400', 0, NULL, '2022-10-07 09:40:28', '2022-10-07 09:40:28', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1578198550364352514, 125878278, '始例多约会', '这是第3篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 0, NULL, '2022-10-07 09:40:31', '2022-10-07 09:40:31', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1578198557989597186, 125878278, '界民里所', '这是第4篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 0, NULL, '2022-10-07 09:40:32', '2022-10-07 09:40:32', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1578198569993695234, 125878278, '思方其者结', '这是第8篇的内容', 0, 0, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 0, NULL, '2022-10-07 09:40:35', '2022-10-07 09:40:35', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1578198582954094594, 125878278, '物起解阶太', '这是第5篇的内容', 0, 2, 0, 'http://dummyimage.com/400x400', 1, NULL, '2022-10-07 09:40:38', '2022-10-10 19:00:56', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1578198623496237058, 125878278, '组基圆等', '这是第6篇的内容', 0, 4, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400,http://dummyimage.com/400x400', 1, NULL, '2022-10-07 09:40:48', '2022-10-10 19:06:55', 0);
+INSERT INTO `tbl_note` (`id`, `user_id`, `title`, `content`, `follow_count`, `like_count`, `view_count`, `images`, `is_public`, `status`, `created_time`, `updated_time`, `deleted`) VALUES (1578198657126166530, 125878278, '本装着图相', '这是第7篇的内容st', 0, 5, 0, 'http://dummyimage.com/400x400,http://dummyimage.com/400x400', 1, NULL, '2022-10-07 09:40:56', '2022-10-10 19:06:55', 0);
 COMMIT;
 
 -- ----------------------------
@@ -182,6 +183,7 @@ CREATE TABLE `tbl_sys_user` (
 -- Records of tbl_sys_user
 -- ----------------------------
 BEGIN;
+INSERT INTO `tbl_sys_user` (`id`, `username`, `password`, `salt`, `name`, `created_time`, `created_by`, `updated_time`, `updated_by`) VALUES (1, 'admin', '$2a$10$PcuaPuI9.EA4AlQzfKV0e.T/6mSVXguL3x5ni2hwtq4CtAbb6vzrG', NULL, NULL, '2022-10-13 08:40:14', NULL, '2022-10-13 11:04:08', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -289,7 +291,7 @@ CREATE TABLE `tbl_user_note_like` (
 BEGIN;
 INSERT INTO `tbl_user_note_like` (`id`, `user_id`, `note_id`, `status`, `created_time`, `updated_time`) VALUES (1577474826698792961, 125878278, 1577468339544956929, 1, '2022-10-05 09:44:41', '2022-10-05 10:21:01');
 INSERT INTO `tbl_user_note_like` (`id`, `user_id`, `note_id`, `status`, `created_time`, `updated_time`) VALUES (1579405602885500930, 125878278, 1578198623496237058, 1, '2022-10-10 17:36:54', '2022-10-10 19:06:55');
-INSERT INTO `tbl_user_note_like` (`id`, `user_id`, `note_id`, `status`, `created_time`, `updated_time`) VALUES (1579408120562614273, 125878278, 1578198657126166530, 1, '2022-10-10 17:46:55', '2022-10-10 19:06:55');
+INSERT INTO `tbl_user_note_like` (`id`, `user_id`, `note_id`, `status`, `created_time`, `updated_time`) VALUES (1579408120562614273, 125878278, 1578198657126166530, 1, '2022-10-10 17:46:55', '2022-10-15 16:45:54');
 INSERT INTO `tbl_user_note_like` (`id`, `user_id`, `note_id`, `status`, `created_time`, `updated_time`) VALUES (1579426744425807874, 125878278, 1578198582954094594, 1, '2022-10-10 19:00:55', '2022-10-10 19:00:55');
 COMMIT;
 
