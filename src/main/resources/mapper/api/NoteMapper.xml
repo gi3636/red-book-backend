@@ -32,10 +32,12 @@
         n.updated_time,
         u.nickname,
         u.avatar,
-        unl.status as isLike
+        unl.status as isLike,
+        unf.status as isFavorite
         from tbl_note n
         left join tbl_user u on n.user_id = u.id
         left join tbl_user_note_like unl on n.id = unl.note_id and unl.user_id = #{selfId}
+        left join tbl_user_note_favorite unf on n.id = unf.note_id and unf.user_id = #{selfId}
         where n.deleted = 0
         <if test="isPublic != null">
             and n.is_public = #{isPublic}

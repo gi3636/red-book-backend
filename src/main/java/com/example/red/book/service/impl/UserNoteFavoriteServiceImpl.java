@@ -46,7 +46,7 @@ public class UserNoteFavoriteServiceImpl extends ServiceImpl<UserNoteFavoriteMap
 
     public Boolean increaseFavoriteCount(Long noteId) {
         try {
-            redisService.hIncr(NoteConstant.USER_NOTE_FAVORITE_KEY, noteId + "", 1L);
+            redisService.hIncr(NoteConstant.USER_NOTE_FAVORITE_COUNT_KEY, noteId + "", 1L);
             return true;
         } catch (Exception e) {
             log.error("增加点赞数失败: {}", e.getMessage(), e);
@@ -56,7 +56,7 @@ public class UserNoteFavoriteServiceImpl extends ServiceImpl<UserNoteFavoriteMap
 
     public Boolean decreaseFavoriteCount(Long noteId) {
         try {
-            redisService.hDecr(NoteConstant.USER_NOTE_FAVORITE_KEY, noteId + "", 1L);
+            redisService.hDecr(NoteConstant.USER_NOTE_FAVORITE_COUNT_KEY, noteId + "", 1L);
             return true;
         } catch (Exception e) {
             log.error("减少点赞数失败: {}", e.getMessage(), e);
@@ -67,6 +67,7 @@ public class UserNoteFavoriteServiceImpl extends ServiceImpl<UserNoteFavoriteMap
     @Override
     public Boolean favorite(Long noteId, Long userId) {
         String key = userId + "::" + noteId;
+        log.info("favorite: {}", key);
         Note note = noteService.selectById(noteId);
         if (note == null) {
             throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
@@ -142,8 +143,8 @@ public class UserNoteFavoriteServiceImpl extends ServiceImpl<UserNoteFavoriteMap
             //点赞数量属于无关紧要的操作，出错无需抛异常
             if (note != null) {
                 log.info("更新笔记收藏数，笔记id：{}，收藏数：{}", note.getId(), favoriteCountVO.getFavoriteCount());
-                Integer likeNum = note.getLikeCount() + favoriteCountVO.getFavoriteCount();
-                note.setLikeCount(likeNum);
+                Integer favoriteNum = note.getFavoriteCount() + favoriteCountVO.getFavoriteCount();
+                note.setFavoriteCount(favoriteNum);
                 //更新点赞数量
                 noteService.update(note);
             }

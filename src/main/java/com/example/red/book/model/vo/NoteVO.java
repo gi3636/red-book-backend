@@ -55,6 +55,9 @@ public class NoteVO {
     @ApiModelProperty("是否点赞")
     private Boolean isLike;
 
+    @ApiModelProperty("是否收藏")
+    private Boolean isFavorite;
+
     @ApiModelProperty("审核状态 0是未审核 1是审核通过 2是审核不通过")
     private Integer status;
 
