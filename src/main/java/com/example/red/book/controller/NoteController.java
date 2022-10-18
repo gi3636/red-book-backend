@@ -12,6 +12,7 @@ import com.example.red.book.model.form.NoteSearchForm;
 import com.example.red.book.model.form.NoteUpdateForm;
 import com.example.red.book.model.vo.NoteVO;
 import com.example.red.book.service.NoteService;
+import com.example.red.book.service.UserNoteFavoriteService;
 import com.example.red.book.service.UserNoteLikeService;
 import com.example.red.book.util.SessionUtil;
 import io.swagger.annotations.Api;
@@ -38,6 +39,9 @@ public class NoteController {
 
     @Autowired
     private UserNoteLikeService userNoteLikeService;
+
+    @Autowired
+    private UserNoteFavoriteService userNoteFavoriteService;
 
     @Autowired
     private SessionUtil sessionUtil;
@@ -104,6 +108,28 @@ public class NoteController {
         }
         return CommonResult.success(null);
     }
+
+
+    @ApiOperation(value = "笔记收藏")
+    @PostMapping("favorite/{noteId}")
+    public CommonResult<Void> favorite(@PathVariable("noteId") Long noteId) {
+        Boolean isSuccess = userNoteFavoriteService.favorite(noteId, sessionUtil.getUserId());
+        if (!isSuccess) {
+            return CommonResult.failed("收藏失败");
+        }
+        return CommonResult.success(null);
+    }
+
+    @ApiOperation(value = "笔记取消收藏")
+    @PostMapping("cancelFavorite/{noteId}")
+    public CommonResult<Void> cancelFavorite(@PathVariable("noteId") Long noteId) {
+        Boolean isSuccess = userNoteFavoriteService.cancelFavorite(noteId, sessionUtil.getUserId());
+        if (!isSuccess) {
+            return CommonResult.failed("取消收藏失败");
+        }
+        return CommonResult.success(null);
+    }
+
 
 }
 

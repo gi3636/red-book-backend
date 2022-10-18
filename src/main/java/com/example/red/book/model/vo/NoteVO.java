@@ -35,7 +35,7 @@ public class NoteVO {
     private String content;
 
     @ApiModelProperty("笔记收藏数")
-    private Integer followCount;
+    private Integer favoriteCount;
 
     @ApiModelProperty("笔记点赞数")
     private Integer likeCount;
@@ -76,7 +76,7 @@ public class NoteVO {
         noteVO.setUserId(note.getUserId());
         noteVO.setTitle(note.getTitle());
         noteVO.setContent(note.getContent());
-        noteVO.setFollowCount(note.getFollowCount());
+        noteVO.setFavoriteCount(note.getFavoriteCount());
         noteVO.setLikeCount(note.getLikeCount());
         noteVO.setViewCount(note.getViewCount());
         noteVO.setImageList(note.getImages() == null ? new ArrayList<>() : Arrays.asList((note.getImages().split(","))));

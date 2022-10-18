@@ -37,7 +37,7 @@ public class NoteDoc {
 
     @Field(type = FieldType.Integer)
     @ApiModelProperty("笔记收藏数")
-    private Integer followCount;
+    private Integer favoriteCount;
 
     @Field(type = FieldType.Integer)
     @ApiModelProperty("笔记点赞数")
@@ -68,7 +68,7 @@ public class NoteDoc {
         this.userId = note.getUserId();
         this.title = note.getTitle();
         this.content = note.getContent();
-        this.followCount = note.getFollowCount();
+        this.favoriteCount = note.getFavoriteCount();
         this.likeCount = note.getLikeCount();
         this.viewCount = note.getViewCount();
         this.images = note.getImages();

@@ -8,7 +8,7 @@
         <result column="user_id" property="userId"/>
         <result column="title" property="title"/>
         <result column="content" property="content"/>
-        <result column="follow_count" property="followCount"/>
+        <result column="favorite_count" property="favoriteCount"/>
         <result column="like_count" property="likeCount"/>
         <result column="view_count" property="viewCount"/>
         <result column="images" property="images"/>
@@ -23,7 +23,7 @@
         n.user_id,
         n.title,
         n.content,
-        n.follow_count,
+        n.favorite_count,
         n.like_count,
         n.view_count,
         n.images,

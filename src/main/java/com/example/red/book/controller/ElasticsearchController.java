@@ -3,20 +3,12 @@ package com.example.red.book.controller;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOptions;
-import co.elastic.clients.elasticsearch._types.mapping.KeywordProperty;
-import co.elastic.clients.elasticsearch._types.mapping.Property;
-import co.elastic.clients.elasticsearch._types.mapping.TextProperty;
-import co.elastic.clients.elasticsearch._types.mapping.TypeMapping;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
-import co.elastic.clients.transport.endpoints.BooleanResponse;
 import com.example.red.book.common.api.CommonResult;
-import com.example.red.book.common.api.ResultCode;
-import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.doc.NoteDoc;
 import io.swagger.annotations.Api;
@@ -29,9 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Api(tags = "elasticsearch模块")
@@ -113,7 +103,7 @@ public class ElasticsearchController {
             note.setTitle("测试" + i);
             note.setContent("测试" + i);
             note.setUserId(1L);
-            note.setFollowCount(1);
+            note.setFavoriteCount(1);
             note.setLikeCount(1);
             noteList.add(note);
         }

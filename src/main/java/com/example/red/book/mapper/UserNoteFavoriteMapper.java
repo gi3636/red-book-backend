@@ -1,6 +1,6 @@
 package com.example.red.book.mapper;
 
-import com.example.red.book.entity.UserNoteFollow;
+import com.example.red.book.entity.UserNoteFavorite;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author franky
  * @since 2022-09-19
  */
-public interface UserNoteFollowMapper extends BaseMapper<UserNoteFollow> {
+public interface UserNoteFavoriteMapper extends BaseMapper<UserNoteFavorite> {
 
 }

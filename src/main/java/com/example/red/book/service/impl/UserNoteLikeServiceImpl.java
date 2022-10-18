@@ -41,6 +41,7 @@ public class UserNoteLikeServiceImpl extends ServiceImpl<UserNoteLikeMapper, Use
     @Autowired
     private UserNoteLikeManager userNoteLikeManager;
 
+
     @Autowired
     private NoteService noteService;
 

@@ -13,8 +13,6 @@ import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * <p>
@@ -46,7 +44,7 @@ public class Note implements Serializable {
     private String content;
 
     @ApiModelProperty("笔记收藏数")
-    private Integer followCount;
+    private Integer favoriteCount;
 
     @ApiModelProperty("笔记点赞数")
     private Integer likeCount;
@@ -62,7 +60,7 @@ public class Note implements Serializable {
 
     @ApiModelProperty("审核状态 0是未审核 1是审核通过 2是审核不通过")
     private Integer status;
-    
+
     @ApiModelProperty("创建时间;创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createdTime;

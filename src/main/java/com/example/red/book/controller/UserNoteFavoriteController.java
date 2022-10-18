@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author franky
  * @since 2022-09-17
  */
 @RestController
-@RequestMapping("/api/userNoteFollow")
-public class UserNoteFollowController {
+@RequestMapping("/api/userNoteFavorite")
+public class UserNoteFavoriteController {
 
 }
 

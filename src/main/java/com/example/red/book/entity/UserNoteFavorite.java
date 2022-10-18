@@ -22,9 +22,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@TableName("tbl_user_note_follow")
-@ApiModel(value = "UserNoteFollow对象", description = "笔记收藏数表")
-public class UserNoteFollow implements Serializable {
+@TableName("tbl_user_note_favorite")
+@ApiModel(value = "UserNoteFavorite对象", description = "笔记收藏数表")
+public class UserNoteFavorite implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,6 +37,8 @@ public class UserNoteFollow implements Serializable {
     @ApiModelProperty("笔记id")
     private Long noteId;
 
+    @ApiModelProperty("收藏状态 0是取消 1是收藏")
+    private Integer status;
 
     @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
@@ -47,4 +49,9 @@ public class UserNoteFollow implements Serializable {
     private Date updatedTime;
 
 
+    public UserNoteFavorite(Long userId, Long noteId, Integer value) {
+        this.userId = userId;
+        this.noteId = noteId;
+        this.status = value;
+    }
 }

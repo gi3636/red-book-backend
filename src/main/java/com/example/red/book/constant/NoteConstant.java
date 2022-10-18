@@ -11,6 +11,8 @@ public class NoteConstant {
     public static final String UPDATE_KEY = "note.update";
     public static final String USER_NOTE_LIKE_KEY = "user::note.like";
     public static final String USER_NOTE_LIKE_COUNT_KEY = "user::note.like.count";
-
+    public static final String USER_NOTE_FAVORITE_KEY = "user::note.favorite";
+    public static final String USER_NOTE_FAVORITE_COUNT_KEY = "user::note.favorite.count";
     public static final String LIKE_TASK_QUARTZ = "LikeTaskQuartz";
+    public static final String FAVORITE_TASK_QUARTZ = "FavoriteTaskQuartz";
 }
