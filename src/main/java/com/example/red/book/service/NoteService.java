@@ -2,7 +2,6 @@ package com.example.red.book.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.red.book.common.api.CommonPage;
-import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.entity.Note;
 import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.NoteAddForm;
@@ -38,7 +37,7 @@ public interface NoteService extends IService<Note> {
 
     Note selectById(Long id);
 
-    ElasticSearchResult<NoteDoc> search(NoteSearchForm noteSearchForm);
+    CommonPage<NoteVO> search(NoteSearchForm noteSearchForm, Long userId);
 
     CommonPage<NoteVO> queryRecommend(Long selfId);
 }

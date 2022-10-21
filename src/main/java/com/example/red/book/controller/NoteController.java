@@ -3,9 +3,7 @@ package com.example.red.book.controller;
 
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.CommonResult;
-import com.example.red.book.common.api.ElasticSearchResult;
 import com.example.red.book.entity.Note;
-import com.example.red.book.model.doc.NoteDoc;
 import com.example.red.book.model.form.NoteAddForm;
 import com.example.red.book.model.form.NoteQueryForm;
 import com.example.red.book.model.form.NoteSearchForm;
@@ -84,8 +82,8 @@ public class NoteController {
 
     @ApiOperation(value = "搜索笔记")
     @PostMapping("search")
-    public CommonResult<ElasticSearchResult<NoteDoc>> search(@Validated @RequestBody NoteSearchForm noteSearchForm) {
-        ElasticSearchResult<NoteDoc> result = noteService.search(noteSearchForm);
+    public CommonResult<CommonPage<NoteVO>> search(@Validated @RequestBody NoteSearchForm noteSearchForm) {
+        CommonPage<NoteVO> result = noteService.search(noteSearchForm, sessionUtil.getUserId());
         return CommonResult.success(result);
     }
 

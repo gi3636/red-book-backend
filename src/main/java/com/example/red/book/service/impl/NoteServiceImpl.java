@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -159,8 +160,19 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
-    public ElasticSearchResult<NoteDoc> search(NoteSearchForm noteSearchForm) {
-        return noteManager.getNoteByEs(noteSearchForm);
+    public CommonPage<NoteVO> search(NoteSearchForm noteSearchForm, Long userId) {
+        ElasticSearchResult<NoteDoc> noteList = noteManager.getNoteByEs(noteSearchForm);
+        List<NoteVO> noteVoList = new ArrayList<>();
+        Page<NoteVO> noteVOPage = new Page<>();
+        for (NoteDoc noteDoc : noteList.getList()) {
+            NoteVO noteVO = this.baseMapper.selectNote(noteDoc.getId(), userId);
+            noteVoList.add(noteVO);
+        }
+        noteVOPage.setRecords(noteVoList);
+        noteVOPage.setTotal(noteList.getTotal());
+        noteVOPage.setSize(noteList.getPageSize());
+        noteVOPage.setCurrent(noteList.getPageNum());
+        return CommonPage.restPage(noteVOPage);
     }
 
     @Override
