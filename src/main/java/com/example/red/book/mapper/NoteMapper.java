@@ -19,4 +19,6 @@ public interface NoteMapper extends BaseMapper<Note> {
     Page<NoteVO> selectNoteList(Page<NoteVO> page, @Param("userId") Long userId, @Param("isPublic") Boolean isPublic, @Param("selfId") Long selfId);
 
     NoteVO selectNote(@Param("noteId") Long noteId, @Param("selfId") Long selfId);
+
+    Page<NoteVO> selectLikedNoteList(Page<NoteVO> page, @Param("userId") Long userId);
 }

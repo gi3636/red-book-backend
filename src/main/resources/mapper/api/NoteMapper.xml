@@ -74,5 +74,28 @@
         </if>
         order by n.created_time desc
     </select>
+    <select id="selectLikedNoteList" resultType="com.example.red.book.model.vo.NoteVO">
+        select n.id,
+               n.user_id,
+               n.title,
+               n.content,
+               n.favorite_count,
+               n.like_count,
+               n.view_count,
+               n.images,
+               n.is_public,
+               n.created_time,
+               n.updated_time,
+               u.nickname,
+               u.avatar
+        from tbl_note n
+                 left join tbl_user u on n.user_id = u.id
+                 left join tbl_user_note_like unl
+                           on n.id = unl.note_id and unl.user_id = #{userId}
+        where n.deleted = 0
+          and n.is_public = 1
+          and unl.status = 1
+        order by n.created_time desc
+    </select>
 
 </mapper>

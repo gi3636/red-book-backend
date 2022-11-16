@@ -11,11 +11,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(description = "笔记查询参数对象")
 public class NoteQueryForm extends PageQueryParam {
 
-    @NotNull(message ="用户id不能为空")
+    @NotNull(message = "用户id不能为空")
     @ApiModelProperty("用户Id")
     private Long userId;
-
-    @NotNull(message = "笔记是否公开不能为空")
-    @ApiModelProperty("是否公开")
-    private Boolean isPublic;
 }

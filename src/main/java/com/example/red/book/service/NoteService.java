@@ -40,4 +40,6 @@ public interface NoteService extends IService<Note> {
     CommonPage<NoteVO> search(NoteSearchForm noteSearchForm, Long userId);
 
     CommonPage<NoteVO> queryRecommend(Long selfId);
+
+    CommonPage<NoteVO> queryLike(NoteQueryForm noteQueryForm, Long userId);
 }

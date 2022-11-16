@@ -62,6 +62,14 @@ public class NoteController {
         return CommonResult.success(noteList);
     }
 
+    @ApiOperation(value = "查询点过赞的笔记")
+    @PostMapping("like/list")
+    public CommonResult<CommonPage<NoteVO>> getLikedList(@Validated @RequestBody NoteQueryForm noteQueryForm) {
+        CommonPage<NoteVO> noteList = noteService.queryLike(noteQueryForm, sessionUtil.getUserId());
+        return CommonResult.success(noteList);
+    }
+
+
     @ApiOperation(value = "推荐笔记")
     @GetMapping("recommend")
     public CommonResult<CommonPage<NoteVO>> recommend() {

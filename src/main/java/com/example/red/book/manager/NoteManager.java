@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Slf4j
@@ -47,7 +48,7 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
 
     public Page<Note> getNotePage(NoteQueryForm noteQueryForm) {
         LambdaQueryWrapper<Note> wrapper = new LambdaQueryWrapper<Note>()
-                .eq(Note::getIsPublic, noteQueryForm.getIsPublic());
+                .eq(Note::getIsPublic, true);
         if (noteQueryForm.getUserId() != null) {
             wrapper.eq(Note::getUserId, noteQueryForm.getUserId());
         }
@@ -57,7 +58,7 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
 
     public Page<NoteVO> getNoteVOPage(NoteQueryForm noteQueryForm, Long selfId) {
         Page<NoteVO> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
-        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, noteQueryForm.getUserId(), noteQueryForm.getIsPublic(), selfId);
+        Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, noteQueryForm.getUserId(), true, selfId);
         for (NoteVO noteVO : noteVOPage.getRecords()) {
             noteVO.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
             noteVO.setImages(null);
@@ -65,6 +66,23 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
         return noteVOPage;
     }
 
+
+    public Page<NoteVO> getLikedNoteVOPage(NoteQueryForm noteQueryForm, Long selfId) {
+        Page<NoteVO> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
+        //查询用户点赞过的笔记
+        Page<NoteVO> noteVOPage = this.baseMapper.selectLikedNoteList(page, noteQueryForm.getUserId());
+        List<NoteVO> likedRecord = noteVOPage.getRecords();
+        List<NoteVO> noteVOList = new ArrayList<>();
+        likedRecord.forEach(noteVO -> {
+            //查询笔记是否被当前自己点赞和收藏过
+            NoteVO note = this.baseMapper.selectNote(noteVO.getId(), selfId);
+            note.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
+            note.setImages(null);
+            noteVOList.add(note);
+        });
+        noteVOPage.setRecords(noteVOList);
+        return noteVOPage;
+    }
 
     public ElasticSearchResult<NoteDoc> getNoteByEs(NoteSearchForm noteSearchForm) {
         BoolQuery boolQuery = new BoolQuery.Builder()
