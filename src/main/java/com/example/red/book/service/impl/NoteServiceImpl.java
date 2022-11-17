@@ -149,7 +149,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
                 .eq(Note::getUserId, note.getUserId());
         Boolean isSuccess = this.baseMapper.update(note, wrapper) > 0;
         if (isSuccess) {
-            rabbitTemplate.convertAndSend(NoteConstant.EXCHANGE_NAME, NoteConstant.UPDATE_KEY, note);
+            //rabbitTemplate.convertAndSend(NoteConstant.EXCHANGE_NAME, NoteConstant.UPDATE_KEY, note);
         }
         return isSuccess;
     }
@@ -184,6 +184,12 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
             noteVO.setImages(null);
         }
         return CommonPage.restPage(noteVOPage);
+    }
+
+    @Override
+    public CommonPage<NoteVO> queryLike(NoteQueryForm noteQueryForm, Long selfId) {
+        Page<NoteVO> data = noteManager.getLikedNoteVOPage(noteQueryForm, selfId);
+        return CommonPage.restPage(data);
     }
 
 }
