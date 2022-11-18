@@ -56,7 +56,7 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
         return this.baseMapper.selectPage(page, wrapper);
     }
 
-    public Page<NoteVO> getNoteVOPage(NoteQueryForm noteQueryForm, Long selfId) {
+    public Page<NoteVO> convertNoteVOPage(NoteQueryForm noteQueryForm, Long selfId) {
         Page<NoteVO> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
         Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, noteQueryForm.getUserId(), true, selfId);
         for (NoteVO noteVO : noteVOPage.getRecords()) {
@@ -71,17 +71,7 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
         Page<NoteVO> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
         //查询用户点赞过的笔记
         Page<NoteVO> noteVOPage = this.baseMapper.selectLikedNoteList(page, noteQueryForm.getUserId());
-        List<NoteVO> likedRecord = noteVOPage.getRecords();
-        List<NoteVO> noteVOList = new ArrayList<>();
-        likedRecord.forEach(noteVO -> {
-            //查询笔记是否被当前自己点赞和收藏过
-            NoteVO note = this.baseMapper.selectNote(noteVO.getId(), selfId);
-            note.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
-            note.setImages(null);
-            noteVOList.add(note);
-        });
-        noteVOPage.setRecords(noteVOList);
-        return noteVOPage;
+        return convertNoteVOPage(selfId, noteVOPage);
     }
 
     public ElasticSearchResult<NoteDoc> getNoteByEs(NoteSearchForm noteSearchForm) {
@@ -120,5 +110,33 @@ public class NoteManager extends ServiceImpl<NoteMapper, Note> {
             throw GlobalException.from(ResultCode.QueryError);
         }
         return result;
+    }
+
+    public Page<NoteVO> getFavoriteNoteVOPage(NoteQueryForm noteQueryForm, Long selfId) {
+        Page<NoteVO> page = new Page<>(noteQueryForm.getCurrentPage(), noteQueryForm.getSize());
+        //查询用户点赞过的笔记
+        Page<NoteVO> noteVOPage = this.baseMapper.selectFavoriteNoteList(page, noteQueryForm.getUserId());
+        return convertNoteVOPage(selfId, noteVOPage);
+    }
+
+    /**
+     * 装换成完整的数据
+     *
+     * @param selfId
+     * @param noteVOPage
+     * @return
+     */
+    private Page<NoteVO> convertNoteVOPage(Long selfId, Page<NoteVO> noteVOPage) {
+        List<NoteVO> records = noteVOPage.getRecords();
+        List<NoteVO> noteVOList = new ArrayList<>();
+        records.forEach(noteVO -> {
+            //查询笔记是否被当前自己点赞和收藏过
+            NoteVO note = this.baseMapper.selectNote(noteVO.getId(), selfId);
+            note.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));
+            note.setImages(null);
+            noteVOList.add(note);
+        });
+        noteVOPage.setRecords(noteVOList);
+        return noteVOPage;
     }
 }

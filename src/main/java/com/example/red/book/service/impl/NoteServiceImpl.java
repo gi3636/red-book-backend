@@ -77,7 +77,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
 
     @Override
     public CommonPage<NoteVO> query(NoteQueryForm noteQueryForm, Long selfId) {
-        Page<NoteVO> data = noteManager.getNoteVOPage(noteQueryForm, selfId);
+        Page<NoteVO> data = noteManager.convertNoteVOPage(noteQueryForm, selfId);
         return CommonPage.restPage(data);
     }
 
@@ -189,6 +189,12 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     @Override
     public CommonPage<NoteVO> queryLike(NoteQueryForm noteQueryForm, Long selfId) {
         Page<NoteVO> data = noteManager.getLikedNoteVOPage(noteQueryForm, selfId);
+        return CommonPage.restPage(data);
+    }
+
+    @Override
+    public CommonPage<NoteVO> queryFavorite(NoteQueryForm noteQueryForm, Long selfId) {
+        Page<NoteVO> data = noteManager.getFavoriteNoteVOPage(noteQueryForm, selfId);
         return CommonPage.restPage(data);
     }
 

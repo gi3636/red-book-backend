@@ -69,6 +69,13 @@ public class NoteController {
         return CommonResult.success(noteList);
     }
 
+    @ApiOperation(value = "查询收藏过的笔记")
+    @PostMapping("favorite/list")
+    public CommonResult<CommonPage<NoteVO>> getFavoriteList(@Validated @RequestBody NoteQueryForm noteQueryForm) {
+        CommonPage<NoteVO> noteList = noteService.queryFavorite(noteQueryForm, sessionUtil.getUserId());
+        return CommonResult.success(noteList);
+    }
+
 
     @ApiOperation(value = "推荐笔记")
     @GetMapping("recommend")
@@ -95,7 +102,7 @@ public class NoteController {
         return CommonResult.success(result);
     }
 
-    @ApiOperation(value = "笔记点赞")
+    @ApiOperation(value = "点赞笔记")
     @PostMapping("like/{noteId}")
     public CommonResult<Void> like(@PathVariable("noteId") Long noteId) {
         Boolean isSuccess = userNoteLikeService.like(noteId, sessionUtil.getUserId());
@@ -105,7 +112,7 @@ public class NoteController {
         return CommonResult.success(null);
     }
 
-    @ApiOperation(value = "笔记取消点赞")
+    @ApiOperation(value = "取消点赞")
     @PostMapping("unlike/{noteId}")
     public CommonResult<Void> unlike(@PathVariable("noteId") Long noteId) {
         Boolean isSuccess = userNoteLikeService.unlike(noteId, sessionUtil.getUserId());
@@ -116,7 +123,7 @@ public class NoteController {
     }
 
 
-    @ApiOperation(value = "笔记收藏")
+    @ApiOperation(value = "收藏笔记")
     @PostMapping("favorite/{noteId}")
     public CommonResult<Void> favorite(@PathVariable("noteId") Long noteId) {
         Boolean isSuccess = userNoteFavoriteService.favorite(noteId, sessionUtil.getUserId());
@@ -126,7 +133,7 @@ public class NoteController {
         return CommonResult.success(null);
     }
 
-    @ApiOperation(value = "笔记取消收藏")
+    @ApiOperation(value = "取消收藏")
     @PostMapping("cancelFavorite/{noteId}")
     public CommonResult<Void> cancelFavorite(@PathVariable("noteId") Long noteId) {
         Boolean isSuccess = userNoteFavoriteService.cancelFavorite(noteId, sessionUtil.getUserId());

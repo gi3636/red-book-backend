@@ -42,4 +42,6 @@ public interface NoteService extends IService<Note> {
     CommonPage<NoteVO> queryRecommend(Long selfId);
 
     CommonPage<NoteVO> queryLike(NoteQueryForm noteQueryForm, Long userId);
+
+    CommonPage<NoteVO> queryFavorite(NoteQueryForm noteQueryForm, Long userId);
 }
