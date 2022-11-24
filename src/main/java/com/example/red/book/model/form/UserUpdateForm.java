@@ -1,14 +1,10 @@
 package com.example.red.book.model.form;
 
 
-import com.example.red.book.model.enums.SexEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
 
 @Data
@@ -26,8 +22,10 @@ public class UserUpdateForm {
     @ApiModelProperty("头像")
     private String avatar;
 
-    @ApiModelProperty("性别 0是保密 MAN是男 WOMAN是女")
-    private SexEnum sex;
+    @Min(value = 0, message = "最小值为0")
+    @Max(value = 2, message = "最大值为2")
+    @ApiModelProperty("性别 0是保密 1是男 2是女")
+    private Integer sex;
 
     @Past(message = "必须为过去的时间")
     @ApiModelProperty("生日")
@@ -39,7 +37,7 @@ public class UserUpdateForm {
     @ApiModelProperty("城市")
     private String city;
 
-    @Size(min = 0, max = 100, message = "长度必须大于等于0或小于等于100")
+    @Size(max = 100, message = "长度必须大于等于0或小于等于100")
     @ApiModelProperty("简介")
     private String description;
 

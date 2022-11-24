@@ -1,8 +1,5 @@
 package com.example.red.book.service.impl;
 
-import com.example.red.book.model.enums.SexEnum;
-
-
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.ResultCode;
@@ -58,7 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userVo.setMobile(user.getMobile());
         userVo.setNickname(user.getNickname());
         userVo.setAvatar(user.getAvatar());
-        userVo.setSex(SexEnum.getByIndex((user.getSex())));
+        userVo.setSex(user.getSex());
         userVo.setBirthday(user.getBirthday());
         userVo.setCountry(user.getCountry());
         userVo.setCity(user.getCity());
@@ -100,9 +97,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setNickname(userUpdateForm.getNickname());
         user.setAvatar(userUpdateForm.getAvatar());
         //TODO-性别能否直接定义枚举？这样可以限制前端传的类型，包括在代码中使用也方便一点，唯一的坏处就是保存到数据库的时候需要转一下
-        if (userUpdateForm.getSex() != null) {
-            user.setSex(userUpdateForm.getSex().getIndex());
-        }
+        //if (userUpdateForm.getSex() != null) {
+        //    user.setSex(userUpdateForm.getSex().getIndex());
+        //}
+        user.setBirthday(userUpdateForm.getBirthday());
+        user.setSex(userUpdateForm.getSex());
         user.setCountry(userUpdateForm.getCountry());
         user.setCity(userUpdateForm.getCity());
         user.setDescription(userUpdateForm.getDescription());
