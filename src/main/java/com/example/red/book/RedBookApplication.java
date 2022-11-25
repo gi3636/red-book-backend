@@ -1,5 +1,6 @@
 package com.example.red.book;
 
+import com.example.red.book.common.annotation.EnableNettyServer;
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -14,6 +15,7 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
+@EnableNettyServer
 @EnableSwagger2
 @EnableKnife4j
 @EnableCaching
