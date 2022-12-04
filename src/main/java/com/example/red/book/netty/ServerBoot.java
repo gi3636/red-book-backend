@@ -1,4 +1,6 @@
-package com.example.red.book.config;
+package com.example.red.book.netty;
+
+import com.example.red.book.config.NettyProperties;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -16,7 +18,7 @@ public class ServerBoot {
     @Autowired
     ServerBootstrap serverBootstrap;
     @Resource
-    NioEventLoopGroup boosGroup;
+    NioEventLoopGroup bossGroup;
     @Resource
     NioEventLoopGroup workerGroup;
     @Autowired
@@ -41,7 +43,7 @@ public class ServerBoot {
     @PreDestroy
     public void close() throws InterruptedException {
         log.info("关闭Netty服务器");
-        boosGroup.shutdownGracefully();
+        bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
     }
 }

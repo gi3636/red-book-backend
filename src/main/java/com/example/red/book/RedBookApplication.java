@@ -25,8 +25,6 @@ public class RedBookApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext run = SpringApplication.run(RedBookApplication.class, args);
-        System.out.println(111);
-
     }
 
     @Bean

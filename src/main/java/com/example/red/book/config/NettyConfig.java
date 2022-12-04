@@ -1,13 +1,10 @@
 package com.example.red.book.config;
 
-import com.example.red.book.handler.ClientHandler;
-import com.example.red.book.handler.ServerHandler;
-import io.netty.bootstrap.Bootstrap;
+import com.example.red.book.netty.handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +24,7 @@ public class NettyConfig {
      */
     @Bean
     public NioEventLoopGroup bossGroup() {
-        return new NioEventLoopGroup(nettyProperties.getBoss());
+        return new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2);
     }
 
     /**
@@ -38,7 +35,7 @@ public class NettyConfig {
      */
     @Bean
     public NioEventLoopGroup workerGroup() {
-        return new NioEventLoopGroup(nettyProperties.getWorker());
+        return new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 20);
     }
 
     /**
@@ -57,22 +54,5 @@ public class NettyConfig {
         return serverBootstrap;
     }
 
-    /**
-     * 客户端启动器
-     *
-     * @return
-     */
-    @Bean
-    public Bootstrap bootstrap() {
-        // 新建一组线程池
-        NioEventLoopGroup eventExecutors = new NioEventLoopGroup(nettyProperties.getBoss());
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap
-                .group(eventExecutors)   // 指定线程组
-                .option(ChannelOption.SO_KEEPALIVE, true)
-                .channel(NioSocketChannel.class) // 指定通道
-                .handler(new ClientHandler()); // 指定处理器
-        return bootstrap;
-    }
 }
 

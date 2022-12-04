@@ -1,4 +1,4 @@
-package com.example.red.book.handler;
+package com.example.red.book.netty.bean;
 
 import cn.hutool.json.JSONUtil;
 import lombok.AllArgsConstructor;

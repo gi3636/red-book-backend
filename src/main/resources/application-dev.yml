@@ -45,10 +45,7 @@ elasticsearch:
 
 #Netty的一些配置
 netty:
-  boss: 4
-  worker: 2
   timeout: 6000
   port: 9000
   #多端口绑定
   portSalve: 9001
-  host: 127.0.0.1
