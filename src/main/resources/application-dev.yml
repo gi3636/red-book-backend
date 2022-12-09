@@ -9,10 +9,11 @@ spring:
     #    port: 6379 # Redis服务器连接端口
     #    password: # Redis服务器连接密码（默认为空）
     #    timeout: 3000ms # 连接超时时间（毫秒）
-    host: 47.93.248.2 # Redis服务器地址
+    host: 36.26.69.161 # Redis服务器地址
     database: 0 # Redis数据库索引（默认为0）
     port: 6379 # Redis服务器连接端口
-    password: '!Aa0137989720' # Redis服务器连接密码（默认为空）
+    #    password: '!Aa0137989720' # Redis服务器连接密码（默认为空）
+    password: '123456' # Redis服务器连接密码（默认为空）
     timeout: 3000ms # 连接超时时间（毫秒）
   mvc:
     pathmatch:
@@ -20,10 +21,13 @@ spring:
   servlet:
     multipart:
       max-file-size: 100MB
-logging:
-  level:
-    root: info
-    com.macro.mall: debug
+  logging:
+    level:
+      root: info
+
+  elasticsearch:
+    uris: 36.26.69.161:9200
+
 
 aliyun:
   sts:
@@ -41,7 +45,7 @@ aliyun:
     workflowId: b2cde7eaf99a895b89ab1a88abee0a25 #工作流id
 
 elasticsearch:
-  http: "localhost:9200"
+  http: "36.26.69.161:9200"
 
 #Netty的一些配置
 netty:
