@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+import static com.example.red.book.model.enums.MessageActionEnum.getMessageActionEnum;
+
 @Slf4j
 @Component
 @ChannelHandler.Sharable
@@ -44,51 +46,59 @@ public class ServerListenerHandler extends SimpleChannelInboundHandler<TextWebSo
          * */
         String content = msg.text();
         Channel channel = ctx.channel();
+        System.out.println("接收到消息: " + content);
         DataContent dataContent = JsonUtils.jsonToPojo(content, DataContent.class);
         assert dataContent != null;
-        Integer action = dataContent.getAction();
-        if (Objects.equals(action, MessageActionEnum.CONNECT.type)) {
-            //进行关联注册
-            String senderId = dataContent.getChatMsg().getSenderId();
-            UserConnectPool.getChannelMap().put(senderId, channel);
+        MessageActionEnum action = getMessageActionEnum(dataContent.getAction());
+        // 判断消息类型，根据不同的类型来处理不同的业务
+        switch (action) {
+            case CONNECT:
+                // 1.第一次(或重连)初始化连接
+                String senderId = dataContent.getChatMsg().getSenderId();
+                UserConnectPool.getChannelMap().put(senderId, channel);
+                // 将用户ID作为自定义属性加入到channel中，方便随时channel中获取用户ID
+                AttributeKey<String> key = AttributeKey.valueOf("userId");
+                ctx.channel().attr(key).setIfAbsent(senderId);
+                break;
+            case CHAT:
+                // 2.聊天消息，把聊天记录保存到数据库，同时标记消息的签收状态[未签收]
+                ChatMsg chatMsg = dataContent.getChatMsg();
+                String receiverId = chatMsg.getReceiverId();
+                Channel receiverChannel = UserConnectPool.getChannelMap().get(receiverId);
+                if (Objects.nonNull(receiverChannel)) {
+                    // 当receiverChannel不为空的时候，从ChannelGroup当中查找对应的channel是否存在
+                    Channel findChannel = UserConnectPool.getChannelGroup().find(receiverChannel.id());
+                    if (Objects.nonNull(findChannel)) {
+                        // 用户在线
+                        receiverChannel.writeAndFlush(new TextWebSocketFrame(JsonUtils.objectToJson(dataContent)));
+                        // TODO 保存消息到数据库，并且标记为 未签收
 
-            // 将用户ID作为自定义属性加入到channel中，方便随时channel中获取用户ID
-            AttributeKey<String> key = AttributeKey.valueOf("userId");
-            ctx.channel().attr(key).setIfAbsent(senderId);
-
-        } else if (Objects.equals(action, MessageActionEnum.CHAT.type)) {
-            /**
-             * 解析你的消息，然后进行持久化，或者其他的操作，看你自己
-             * */
-            ChatMsg chatMsg = dataContent.getChatMsg();
-
-            //发送消息
-            Channel receiverChannel = UserConnectPool.getChannel(chatMsg.getReceiverId());
-            if (receiverChannel == null) {
-                //用户不在线
-            } else {
-                //为了保险起见你还可以在你的Group里面去查看有没有这样的Channel
-                //毕竟不太能够保证原子性操作嘛，反正底层也是CurrentMap
-                Channel findChannel = UserConnectPool.getChannelGroup().find(ctx.channel().id());
-                if (findChannel != null) {
-                    receiverChannel.writeAndFlush(
-                            new TextWebSocketFrame(
-                                    JsonUtils.objectToJson(chatMsg)
-                            )
-                    );
+                    } else {
+                        // 用户离线 TODO 推送消息
+                    }
                 } else {
-                    //离线
+                    // 用户离线 TODO 推送消息
                 }
-            }
+                break;
 
-        } else if (Objects.equals(action, MessageActionEnum.SIGNED.type)) {
+            case SIGNED:
+                // 3.签收消息，针对具体的消息进行签收，修改数据库中对应消息的签收状态[已签收]
+                ChatMsg signedMsg = dataContent.getChatMsg();
+                String signedMsgId = signedMsg.getMsgId();
+                // TODO 签收消息，修改数据库中对应消息的签收状态[已签收]
+                break;
 
-        } else if (Objects.equals(action, MessageActionEnum.KEEPALIVE.type)) {
+            case KEEPALIVE:
+                // 4.心跳类型的消息
+                log.info("收到来自channel为[{}]的心跳包...", ctx.channel().id());
+                break;
 
-        } else if (Objects.equals(action, MessageActionEnum.PULL_FRIEND.type)) {
+            case PULL_FRIEND:
+                // 5.拉取好友
+
+                break;
 
         }
-
 
     }
 

@@ -45,7 +45,7 @@ aliyun:
     workflowId: b2cde7eaf99a895b89ab1a88abee0a25 #工作流id
 
 elasticsearch:
-  http: "36.26.69.161:9200"
+  http: "localhost:9200"
 
 #Netty的一些配置
 netty:

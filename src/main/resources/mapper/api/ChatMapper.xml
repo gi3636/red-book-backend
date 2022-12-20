@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.red.book.mapper.ChatMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.red.book.entity.Chat">
+        <id column="id" property="id"/>
+        <result column="sender_id" property="senderId"/>
+        <result column="last_msg_id" property="lastMsgId"/>
+        <result column="last_content" property="lastContent"/>
+        <result column="avatar" property="avatar"/>
+        <result column="chat_type" property="chatType"/>
+        <result column="message_type" property="messageType"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+</mapper>
