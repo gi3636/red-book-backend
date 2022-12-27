@@ -176,8 +176,8 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
-    public CommonPage<NoteVO> queryRecommend(Long selfId) {
-        Page<NoteVO> page = new Page<>(1, 20);
+    public CommonPage<NoteVO> queryRecommend(Long selfId, Integer currentPage, Integer pageSize) {
+        Page<NoteVO> page = new Page<>(currentPage, pageSize);
         Page<NoteVO> noteVOPage = this.baseMapper.selectNoteList(page, null, true, selfId);
         for (NoteVO noteVO : noteVOPage.getRecords()) {
             noteVO.setImageList(noteVO.getImages() == null ? new ArrayList<>() : Arrays.asList((noteVO.getImages().split(","))));

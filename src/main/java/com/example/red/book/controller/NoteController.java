@@ -79,8 +79,8 @@ public class NoteController {
 
     @ApiOperation(value = "推荐笔记")
     @GetMapping("recommend")
-    public CommonResult<CommonPage<NoteVO>> recommend() {
-        CommonPage<NoteVO> noteList = noteService.queryRecommend(sessionUtil.getUserId());
+    public CommonResult<CommonPage<NoteVO>> recommend(@RequestParam Integer currentPage, @RequestParam Integer size) {
+        CommonPage<NoteVO> noteList = noteService.queryRecommend(sessionUtil.getUserId(), currentPage, size);
         return CommonResult.success(noteList);
     }
 
