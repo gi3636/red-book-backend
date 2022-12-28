@@ -45,6 +45,14 @@ public class NoteController {
     private SessionUtil sessionUtil;
 
 
+    @ApiOperation("获取笔记")
+    @GetMapping("/{id}")
+    public CommonResult<NoteVO> get(@PathVariable Long id) {
+        NoteVO noteVO = noteService.getNote(id);
+        return CommonResult.success(noteVO);
+    }
+
+
     @ApiOperation(value = "添加笔记")
     @PostMapping("add")
     public CommonResult<Void> add(@Validated @RequestBody NoteAddForm noteAddForm) {

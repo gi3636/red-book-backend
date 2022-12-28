@@ -1,12 +1,7 @@
 package com.example.red.book.controller;
 
 
-import com.example.red.book.service.UserNoteLikeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,15 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/userNoteLike")
 public class UserNoteLikeController {
-    @Autowired
-    UserNoteLikeService userNoteLikeService;
-
-    @GetMapping("/test")
-    public void test() {
-        userNoteLikeService.transLikedFromRedis2DB();
-        userNoteLikeService.transLikedCountFromRedis2DB();
-    }
-
 
 }
 

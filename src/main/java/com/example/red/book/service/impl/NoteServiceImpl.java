@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.red.book.common.api.CommonPage;
 import com.example.red.book.common.api.ElasticSearchResult;
+import com.example.red.book.common.api.ResultCode;
+import com.example.red.book.common.exception.GlobalException;
 import com.example.red.book.common.service.RedisService;
 import com.example.red.book.constant.NoteConstant;
 import com.example.red.book.entity.Note;
@@ -26,6 +28,7 @@ import com.example.red.book.service.NoteService;
 import com.example.red.book.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -196,6 +199,17 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     public CommonPage<NoteVO> queryFavorite(NoteQueryForm noteQueryForm, Long selfId) {
         Page<NoteVO> data = noteManager.getFavoriteNoteVOPage(noteQueryForm, selfId);
         return CommonPage.restPage(data);
+    }
+
+    @Override
+    public NoteVO getNote(Long id) {
+        Note note = baseMapper.selectOne(new LambdaQueryWrapper<Note>().eq(Note::getId, id));
+        if (note == null) {
+            throw GlobalException.from(ResultCode.NOTE_NOT_EXIST);
+        }
+        NoteVO noteVO = new NoteVO();
+        BeanUtils.copyProperties(note, noteVO);
+        return noteVO;
     }
 
 }
